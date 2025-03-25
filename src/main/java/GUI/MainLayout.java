@@ -66,7 +66,7 @@ public final class MainLayout extends JFrame {
 
         // Tạo các màn hình
         JPanel emptyPanel = new JPanel();
-        PhongGUI Phong = new PhongGUI();
+          PhongGUI Phong = new PhongGUI();
 //        Khachhang Khachhang = new Khachhang();
 //        Nhanvien Nhanvien = new Nhanvien();
 //        Hoadon Hoadon = new Hoadon();

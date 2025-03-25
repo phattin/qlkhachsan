@@ -29,7 +29,7 @@ public class PhongGUI extends JPanel {
         DeleteBtn = new Button("menuButton", "Xóa", 120, 30, "/Icon/xoa_icon.png");
         EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
 
-        CBFilter = new JComboBox<>(new String[]{"Tất cả", "Phòng trống", "Phòng đã đặt"});
+        CBFilter = new JComboBox<>(new String[]{"Tất cả", "Phòng trống", "Phòng đã đặt", "Phòng VIP", "Phòng Thường"});
         CBFilter.setPreferredSize(new Dimension(120, 35));
 
         txtSearch = new JTextField(15);
@@ -47,7 +47,7 @@ public class PhongGUI extends JPanel {
         PanelContent.setBackground(Colors.MAIN_BACKGROUND);
 
         // Tạo bảng dữ liệu
-        String[] columnNames = {"Mã Phòng", "Mã Loại Phòng", "Trạng Thái"};
+        String[] columnNames = {"Mã Phòng", "Loại Phòng","Số Giường","Giá Phong/Ngày", "Trạng Thái"};
         tableModel = new DefaultTableModel(columnNames, 0);
         ContentTable = new JTable(tableModel);
         ContentTable.setDefaultEditor(Object.class, null);
@@ -68,5 +68,6 @@ public class PhongGUI extends JPanel {
         // Thêm vào giao diện chính
         this.add(PanelHeader, BorderLayout.NORTH);
         this.add(PanelContent, BorderLayout.CENTER);
+        
     }
 }

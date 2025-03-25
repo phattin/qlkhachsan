@@ -34,7 +34,7 @@ public class Login extends JFrame {
         tittleBar = new TittleBar(this);
         add(tittleBar, BorderLayout.NORTH);
 
-    // Panel chính chứa 2 phần
+        // Panel chính chứa 2 phần
         JPanel mainPanel = new JPanel(new GridLayout(1, 2));
         getContentPane().add(mainPanel);
 
