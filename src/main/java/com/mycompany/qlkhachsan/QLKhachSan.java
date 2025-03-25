@@ -9,7 +9,6 @@ import GUI.Login;
  * @author Thang Nguyen
  */
 public class QLKhachSan {
-
     public static void main(String[] args) {
         Login App = new Login();
         App.setVisible(true);
