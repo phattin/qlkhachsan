@@ -3,6 +3,7 @@ package DAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Connection.DatabaseConnection;
@@ -52,5 +53,64 @@ public class TaiKhoanDAO {
             e.printStackTrace();
         }
         return null; // Không tìm thấy tài khoản
+    }
+
+    public boolean add(TaiKhoanDTO tkDTO) {
+        int result = 0;
+        String sql = "INSERT INTO taikhoan (TenDangNhap, MatKhau, MaNhanVien, MaChucVu, TrangThai) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, tkDTO.getTenDangNhap());
+            pstmt.setString(2, tkDTO.getMatKhau());   
+            pstmt.setString(3, tkDTO.getMaNV());   
+            pstmt.setString(4, tkDTO.getMaChucVu());   
+            pstmt.setString(5, tkDTO.getTrangThai());
+            result = pstmt.executeUpdate();
+            if(result > 0) 
+                return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; 
+    }
+
+    public boolean update(TaiKhoanDTO tkDTO) {
+        int result = 0;
+        String sql = "UPDATE phong SET MatKhau=?, MaNV=?, MaCV=? WHERE TenDangNhap=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(4, tkDTO.getTenDangNhap());
+            pstmt.setString(1, tkDTO.getMatKhau());   
+            pstmt.setString(2, tkDTO.getMaNV());   
+            pstmt.setString(3, tkDTO.getMaChucVu());   
+            result = pstmt.executeUpdate(); 
+            if(result > 0) 
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; 
+    }
+
+    public boolean delete(String username) {
+        int result = 0;
+        String sql = "UPDATE phong SET TrangThai = ? WHERE TenDangNhap=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(4, username);
+            pstmt.setString(1, "Ẩn"); 
+            result = pstmt.executeUpdate(); 
+            if(result > 0) 
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; 
     }
 }

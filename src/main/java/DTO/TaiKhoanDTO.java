@@ -64,11 +64,11 @@ public class TaiKhoanDTO {
         this.maChucVu = maChucVu;
     }
 
-    public String getTrangthai() {
+    public String getTrangThai() {
         return trangthai;
     }
 
-    public void setTrangthai(String trangthai) {
+    public void setTrangThai(String trangthai) {
         this.trangthai = trangthai;
     }
 }
