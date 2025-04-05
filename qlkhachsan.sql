@@ -81,6 +81,7 @@ CREATE TABLE `danhsachphong` (
 
 CREATE TABLE `datphong` (
   `MaDatPhong` varchar(10) NOT NULL,
+  `MaPhong` varchar(10) DEFAULT NULL,
   `MaKH` varchar(10) DEFAULT NULL,
   `NgayNhanPhong` date NOT NULL,
   `NgayTraPhong` date DEFAULT NULL
@@ -90,9 +91,9 @@ CREATE TABLE `datphong` (
 -- Đang đổ dữ liệu cho bảng `datphong`
 --
 
-INSERT INTO `datphong` (`MaDatPhong`, `MaKH`, `NgayNhanPhong`, `NgayTraPhong`) VALUES
-('DP001', 'KH001', '2025-03-25', '2025-03-27'),
-('DP002', 'KH002', '2025-04-01', '2025-04-05');
+INSERT INTO `datphong` (`MaDatPhong`, `MaPhong`, `MaKH`, `NgayNhanPhong`, `NgayTraPhong`) VALUES
+('DP001', 'P001', 'KH001', '2025-03-25', '2025-03-27');
+
 
 -- --------------------------------------------------------
 
@@ -301,6 +302,7 @@ ALTER TABLE `danhsachphong`
 --
 ALTER TABLE `datphong`
   ADD PRIMARY KEY (`MaDatPhong`),
+  ADD KEY `MaPhong` (`MaPhong`),
   ADD KEY `MaKH` (`MaKH`);
 
 --
@@ -381,7 +383,8 @@ ALTER TABLE `danhsachphong`
 -- Các ràng buộc cho bảng `datphong`
 --
 ALTER TABLE `datphong`
-  ADD CONSTRAINT `datphong_ibfk_1` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`);
+  ADD CONSTRAINT `datphong_ibfk_1` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`),
+  ADD CONSTRAINT `datphong_ibfk_2` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`);
 
 --
 -- Các ràng buộc cho bảng `hoadon`

@@ -44,6 +44,7 @@ public final class Button extends JButton implements MouseListener {
                 case "confirm" -> ColorB = Colors.BUTTON_GREEN;
                 case "login" -> ColorB = Colors.BUTTON_BLUE;
                 case "menuButton" -> ColorB = Colors.WHITE_FONT;
+                case "chitietButton" -> ColorB = Colors.WHITE_FONT;
             }
         }
 
