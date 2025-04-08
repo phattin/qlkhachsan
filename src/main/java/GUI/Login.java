@@ -115,7 +115,7 @@ public class Login extends JFrame {
                 //Chay vao frame Main_Layout
                 JOptionPane.showMessageDialog(null, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 this.setVisible(false);
-                MainLayout mainLayout = new MainLayout(tkDTO.getMaNV());
+                MainLayout mainLayout = new MainLayout(tkDTO.getMaNhanVien());
                 mainLayout.setVisible(true);
             }
             else{

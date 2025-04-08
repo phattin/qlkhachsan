@@ -16,7 +16,7 @@ public class TaiKhoanDAO {
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     tkList.add(new TaiKhoanDTO(
                         rs.getString("TenDangNhap"),
                         rs.getString("MatKhau"),
@@ -64,7 +64,7 @@ public class TaiKhoanDAO {
 
             pstmt.setString(1, tkDTO.getTenDangNhap());
             pstmt.setString(2, tkDTO.getMatKhau());   
-            pstmt.setString(3, tkDTO.getMaNV());   
+            pstmt.setString(3, tkDTO.getMaNhanVien());   
             pstmt.setString(4, tkDTO.getMaChucVu());   
             pstmt.setString(5, tkDTO.getTrangThai());
             result = pstmt.executeUpdate();
@@ -78,14 +78,14 @@ public class TaiKhoanDAO {
 
     public boolean update(TaiKhoanDTO tkDTO) {
         int result = 0;
-        String sql = "UPDATE phong SET MatKhau=?, MaNV=?, MaCV=? WHERE TenDangNhap=?";
+        String sql = "UPDATE taikhoan SET MatKhau=?, MaNV=?, MaChucVu=? WHERE TenDangNhap=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                 pstmt.setString(1, tkDTO.getMatKhau());   
+                 pstmt.setString(2, tkDTO.getMaNhanVien());   
+                 pstmt.setString(3, tkDTO.getMaChucVu());   
             pstmt.setString(4, tkDTO.getTenDangNhap());
-            pstmt.setString(1, tkDTO.getMatKhau());   
-            pstmt.setString(2, tkDTO.getMaNV());   
-            pstmt.setString(3, tkDTO.getMaChucVu());   
             result = pstmt.executeUpdate(); 
             if(result > 0) 
                 return true;
@@ -98,12 +98,12 @@ public class TaiKhoanDAO {
 
     public boolean delete(String username) {
         int result = 0;
-        String sql = "UPDATE phong SET TrangThai = ? WHERE TenDangNhap=?";
+        String sql = "UPDATE taikhoan SET TrangThai = ? WHERE TenDangNhap=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(4, username);
-            pstmt.setString(1, "Ẩn"); 
+                 pstmt.setString(1, "Ẩn"); 
+            pstmt.setString(2, username);
             result = pstmt.executeUpdate(); 
             if(result > 0) 
                 return true;
