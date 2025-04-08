@@ -193,6 +193,7 @@ class ButtonEditor extends DefaultCellEditor {
         StringBuilder info = new StringBuilder();
         for (DatPhongDTO dp : danhSach) {
             info.append("Mã Đặt Phòng: ").append(dp.getMaDatPhong()).append("\n");
+            info.append("Mã Phòng: ").append(dp.getMaPhong()).append("\n");
             info.append("Mã Khách Hàng: ").append(dp.getMaKH()).append("\n");
             info.append("Ngày Nhận: ").append(dp.getNgayNhanPhong()).append("\n");
             info.append("Ngày Trả: ").append(dp.getNgayTraPhong()).append("\n");
