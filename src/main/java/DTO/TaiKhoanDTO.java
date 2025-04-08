@@ -12,22 +12,22 @@ public class TaiKhoanDTO {
 
     private String tenDangNhap;
     private String matkhau;
-    private String maNV;
+    private String maNhanVien;
     private String maChucVu;
     private String trangthai;
 
     public TaiKhoanDTO() {
         tenDangNhap = "";
         matkhau = "";
-        maNV = "";
+        maNhanVien = "";
         maChucVu = "";
         trangthai = "Hiện";
     }
 
-    public TaiKhoanDTO(String tenDangNhap, String matkhau, String maNV, String maChucVu, String trangthai) {
+    public TaiKhoanDTO(String tenDangNhap, String matkhau, String maNhanVien, String maChucVu, String trangthai) {
         this.tenDangNhap = tenDangNhap;
         this.matkhau = matkhau;
-        this.maNV = maNV;
+        this.maNhanVien = maNhanVien;
         this.maChucVu = maChucVu;
         this.trangthai = trangthai;
     }
@@ -48,12 +48,12 @@ public class TaiKhoanDTO {
         this.matkhau = matkhau;
     }
 
-    public String getMaNV() {
-        return maNV;
+    public String getMaNhanVien() {
+        return maNhanVien;
     }
 
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
+    public void setMaNhanVien(String maNhanVien) {
+        this.maNhanVien = maNhanVien;
     }
 
     public String getMaChucVu() {
