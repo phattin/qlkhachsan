@@ -1,9 +1,18 @@
 package GUI; 
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import fillter.Button;
 import fillter.Colors;
-import java.awt.*;
-import javax.swing.*;
 
 public final class MainLayout extends JFrame {
     private JPanel Title, Menu, Content; 
@@ -55,7 +64,7 @@ public final class MainLayout extends JFrame {
         Menu.setPreferredSize(new Dimension(200, 0));
 
         String[] LBButtons = {
-            "TRANG CHỦ", "PHÒNG", "KHÁCH HÀNG", "NHÂN VIÊN",
+            "TRANG CHỦ", "PHÒNG","ĐẶT PHÒNG", "KHÁCH HÀNG", "NHÂN VIÊN",
             "HÓA ĐƠN", "DỊCH VỤ", "BÁO CÁO", "THỐNG KÊ"
         };
         buttons = new Button[LBButtons.length];
@@ -66,13 +75,14 @@ public final class MainLayout extends JFrame {
 
         // Tạo các màn hình
         JPanel emptyPanel = new JPanel();
-          PhongGUI Phong = new PhongGUI();
-//        Khachhang Khachhang = new Khachhang();
-//        Nhanvien Nhanvien = new Nhanvien();
-//        Hoadon Hoadon = new Hoadon();
-//        Dichvu Dichvu = new Dichvu();
-//        Baocao Baocao = new Baocao();
-//        Thongke Thongke = new Thongke();
+            PhongGUI Phong = new PhongGUI();
+            DatPhongGUI DatPhong = new DatPhongGUI();
+            KhachHangGUI KhachHang = new KhachHangGUI();
+//          Nhanvien Nhanvien = new Nhanvien();
+//          Hoadon Hoadon = new Hoadon();
+//          Dichvu Dichvu = new Dichvu();
+//          Baocao Baocao = new Baocao();
+//          Thongke Thongke = new Thongke();
 
         for (int i = 0; i < LBButtons.length; i++) {
             final int index = i;
@@ -90,26 +100,30 @@ public final class MainLayout extends JFrame {
                     targetPanel = Phong;
                     break;
                 case 2:
-                    buttons[i].setButtonIcon("/Icon/KhachHang_icon.png");
-//                    targetPanel = Khachhang;
-                    break;
+                    buttons[i].setButtonIcon("/Icon/PHONG.png");
+                    targetPanel = DatPhong;
+                    break;    
                 case 3:
+                    buttons[i].setButtonIcon("/Icon/KhachHang_icon.png");
+                    targetPanel = KhachHang;
+                    break;
+                case 4:
                     buttons[i].setButtonIcon("/Icon/Nhanvien_icon.png");
 //                    targetPanel = Nhanvien;
                     break;
-                case 4:
+                case 5:
                     buttons[i].setButtonIcon("/Icon/XuatHang_icon.png");
 //                    targetPanel = Hoadon;
                     break;
-                case 5:
+                case 6:
                     buttons[i].setButtonIcon("/Icon/ThongTinSach_icon.png");
 //                    targetPanel = Dichvu;
                     break;
-                case 6:
+                case 7:
                     buttons[i].setButtonIcon("/Icon/ThongKe_icon.png");
 //                    targetPanel = Baocao;
                     break;
-                case 7:
+                case 8:
                     buttons[i].setButtonIcon("/Icon/ThongKe_icon.png");
 //                    targetPanel = Thongke;
                     break;

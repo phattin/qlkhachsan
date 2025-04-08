@@ -16,26 +16,27 @@ public class PhongBUS {
     }
 
     public boolean addPhong(PhongDTO phong) {
-        if (phong == null || phong.getMaPhong() <= 0 || phong.getMaLoaiPhong() <= 0  || phong.getTrangThai().isEmpty()) {
-            System.err.println("Dữ liệu phong không hợp lệ!");
+        if (phong == null || phong.getMaPhong().isEmpty() || phong.getMaLoaiPhong().isEmpty() || phong.getTrangThai().isEmpty()) {
+            System.err.println("Dữ liệu phòng không hợp lệ!");
             return false;
         }
         return phongDAO.add(phong) > 0; 
     }
 
     public boolean updatePhong(PhongDTO phong) {
-        if (phong == null || phong.getMaPhong() <= 0 || phong.getMaLoaiPhong() <= 0 || phong.getTrangThai().isEmpty()) {
-            System.err.println("Dữ liệu phong không hợp lệ!");
+        if (phong == null || phong.getMaPhong().isEmpty() || phong.getMaLoaiPhong().isEmpty() || phong.getTrangThai().isEmpty()) {
+            System.err.println("Dữ liệu phòng không hợp lệ!");
             return false;
         }
         return phongDAO.update(phong) > 0; 
     }
 
-    public boolean deletePhong(int maPhong) {
-        if (maPhong <= 0) {
-            System.err.println("Mã phong không hợp lệ!");
+    public boolean deletePhong(String maPhong) {
+        if (maPhong == null || maPhong.isEmpty()) {
+            System.err.println("Mã phòng không hợp lệ!");
             return false;
         }
         return phongDAO.delete(maPhong) > 0;  
     }
 }
+        
