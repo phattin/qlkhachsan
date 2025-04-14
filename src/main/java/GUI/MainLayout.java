@@ -106,7 +106,6 @@ public final class MainLayout extends JFrame {
         System.out.println("Mã chức vụ: " + maChucVu);
         ArrayList<PhanQuyenDTO> pqList = PhanQuyenBUS.getPhanQuyenByMaChucVu(maChucVu);
         for (PhanQuyenDTO pq : pqList) {
-            System.out.println("Mã chức năng: " + pq.getMaChucNang());
             //Tên chức năng
             String tenChucNang = ChucNangBUS.getChucNangByMa(pq.getMaChucNang()).getTenChucNang();
             switch (tenChucNang) {
@@ -158,7 +157,6 @@ public final class MainLayout extends JFrame {
             for (int i = 0; i < LBButtons.size(); i++) {
                 String tenChucNang = LBButtons.get(i);
                 String iconPath = urlList.get(i);
-                System.out.println(iconPath);
                 buttons[i] = new Button("menuButton", tenChucNang, 180, 40);
                 buttons[i].setButtonIcon(iconPath);
             
@@ -170,7 +168,7 @@ public final class MainLayout extends JFrame {
                     case "Phòng" -> new PhongGUI();
                     case "Đặt phòng" -> new DatPhongGUI();
                     case "Khách hàng" -> new KhachHangGUI();
-                    // case "Nhân viên" -> new NhanVienGUI();
+                    case "Nhân viên" -> new NhanVienGUI();
                     // case "Tài khoản" -> new TaiKhoanGUI();
                     // case "Phân quyền" -> new PhanQuyenGUI();
                     // case "Hóa đơn" -> new HoaDonGUI();

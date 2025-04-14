@@ -57,7 +57,7 @@ public class TaiKhoanDAO {
 
     public boolean add(TaiKhoanDTO tkDTO) {
         int result = 0;
-        String sql = "INSERT INTO taikhoan (TenDangNhap, MatKhau, MaNhanVien, MaChucVu, TrangThai) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO taikhoan (TenDangNhap, MatKhau, MaNV, MaChucVu, TrangThai) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -96,14 +96,14 @@ public class TaiKhoanDAO {
         return false; 
     }
 
-    public boolean delete(String username) {
+    public boolean delete(String maNhanVien) {
         int result = 0;
-        String sql = "UPDATE taikhoan SET TrangThai = ? WHERE TenDangNhap=?";
+        String sql = "UPDATE taikhoan SET TrangThai = ? WHERE MaNV=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                 pstmt.setString(1, "Ẩn"); 
-            pstmt.setString(2, username);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, "Ẩn"); 
+            pstmt.setString(2, maNhanVien);
             result = pstmt.executeUpdate(); 
             if(result > 0) 
                 return true;
@@ -112,5 +112,18 @@ public class TaiKhoanDAO {
             e.printStackTrace();
         }
         return false; 
+    }
+
+    public boolean isUsernameExists(String username) {
+        String sql = "SELECT * FROM taikhoan WHERE TenDangNhap = ? AND TrangThai = 'Hiện'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next(); // Nếu có kết quả trả về thì username đã tồn tại
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

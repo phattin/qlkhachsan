@@ -1,11 +1,12 @@
 package DTO;
 
 public class NhanVienDTO {
-    private String maNV;
+    private String maNhanVien;
     private String hoTen;
     private String gioiTinh;
     private String sdt;
     private String email;
+    private String diaChi;
     private long luong;
     private String ngayNhanViec;
     private String trangThai;
@@ -13,23 +14,24 @@ public class NhanVienDTO {
     public NhanVienDTO() {
     }
 
-    public NhanVienDTO(String maNV, String hoTen, String gioiTinh, String sdt, String email, long luong, String ngayNhanViec, String trangThai) {
-        this.maNV = maNV;
+    public NhanVienDTO(String maNhanVien, String hoTen, String gioiTinh, String sdt, String email, String diaChi, long luong, String ngayNhanViec, String trangThai) {
+        this.maNhanVien = maNhanVien;
         this.hoTen = hoTen;
         this.gioiTinh = gioiTinh;
         this.sdt = sdt;
         this.email = email;
+        this.diaChi = diaChi;
         this.luong = luong;
         this.ngayNhanViec = ngayNhanViec;
         this.trangThai = trangThai;
     }
     
-    public String getMaNV() {
-        return maNV;
+    public String getMaNhanVien() {
+        return maNhanVien;
     }
 
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
+    public void setMaNhanVien(String maNhanVien) {
+        this.maNhanVien = maNhanVien;
     }
 
     public String getHoTen() {
@@ -48,11 +50,11 @@ public class NhanVienDTO {
         this.gioiTinh = gioiTinh;
     }
 
-    public String getSdt() {
+    public String getSDT() {
         return sdt;
     }
 
-    public void setSdt(String sdt) {
+    public void setSDT(String sdt) {
         this.sdt = sdt;
     }
 
@@ -62,6 +64,14 @@ public class NhanVienDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDiaChi() {
+        return diaChi;
+    }
+
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
     }
 
     public long getLuong() {
