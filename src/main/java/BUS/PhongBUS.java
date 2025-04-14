@@ -1,14 +1,18 @@
 package BUS;
 
+import DTO.LoaiPhongDTO;
 import DTO.PhongDTO;
 import DAO.PhongDAO;
+import DAO.LoaiPhongDAO;
 import java.util.ArrayList;
 
 public class PhongBUS {
     private PhongDAO phongDAO;
+    private LoaiPhongDAO loaiPhongDAO;
 
     public PhongBUS() {
         phongDAO = new PhongDAO();
+        loaiPhongDAO = new LoaiPhongDAO(); // Sửa lỗi thiếu DAO
     }
 
     public ArrayList<PhongDTO> getAllPhong() {
@@ -37,6 +41,20 @@ public class PhongBUS {
             return false;
         }
         return phongDAO.delete(maPhong) > 0;  
+    }
+
+    public LoaiPhongDTO getLoaiPhongByMaPhong(String maPhong) {
+        return phongDAO.getLoaiPhongByMaPhong(maPhong);
+    }
+    
+
+    public LoaiPhongDTO getById(String maLoaiPhong) {
+        return loaiPhongDAO.getById(maLoaiPhong);
+    }
+
+    public boolean isMaPhongExists(String maPhong) {
+        PhongDTO phong = phongDAO.getById(maPhong);
+        return phong != null;  
     }
 }
         

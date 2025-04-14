@@ -28,6 +28,24 @@ import DTO.DatPhongDTO;
 import DTO.PhongDTO;
 import fillter.Button;
 import fillter.Colors;
+<<<<<<< HEAD
+=======
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import BUS.PhongBUS;
+import DTO.PhongDTO;
+import GUI.Dialog.AddCustomerGUI;
+import GUI.Dialog.AddRoomGUI;
+import BUS.DatPhongBUS;
+import BUS.LoaiPhongBUS;
+import DTO.DatPhongDTO;
+import DTO.LoaiPhongDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+>>>>>>> origin/Nhat2
 
 
 public class PhongGUI extends JPanel {
@@ -40,6 +58,10 @@ public class PhongGUI extends JPanel {
     private DefaultTableModel tableModel;
     private PhongBUS phongBUS;
     private DatPhongBUS datPhongBUS;
+<<<<<<< HEAD
+=======
+    private LoaiPhongBUS loaiPhongBus;
+>>>>>>> origin/Nhat2
 
     public PhongGUI() {
         this.setBackground(Colors.MAIN_BACKGROUND);
@@ -59,7 +81,15 @@ public class PhongGUI extends JPanel {
         DeleteBtn = new Button("menuButton", "Xóa", 120, 30, "/Icon/xoa_icon.png");
         EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
 
+<<<<<<< HEAD
         CBFilter = new JComboBox<>(new String[]{"Tất cả", "Phòng trống", "Phòng đã đặt", "Phòng VIP", "Phòng Thường"});
+=======
+        AddBtn.addActionListener(e -> addNewRoom());
+        EditBtn.addActionListener(e -> editRoom());
+        DeleteBtn.addActionListener(e -> deleteRoom());
+
+        CBFilter = new JComboBox<>(new String[]{"Tất cả", "Phòng trống", "Phòng đã đặt"});
+>>>>>>> origin/Nhat2
         CBFilter.setPreferredSize(new Dimension(120, 35));
 
         txtSearch = new JTextField(15);
@@ -99,12 +129,22 @@ public class PhongGUI extends JPanel {
         ArrayList<PhongDTO> danhSachPhong = phongBUS.getAllPhong();
     
         for (PhongDTO phong : danhSachPhong) {
+<<<<<<< HEAD
             tableModel.addRow(new Object[]{
                 phong.getMaPhong(),
                 phong.getMaLoaiPhong(),
                 phong.getTenLoaiPhong(),
                 phong.getSoGiuong(),
                 phong.getGiaTien(),
+=======
+            LoaiPhongDTO loaiPhong = phongBUS.getLoaiPhongByMaPhong(phong.getMaPhong());
+            tableModel.addRow(new Object[]{
+                phong.getMaPhong(),
+                phong.getMaLoaiPhong(),
+                loaiPhong.getTenLoaiPhong(),
+                loaiPhong.getSoGiuong(),
+                loaiPhong.getGiaPhong(),
+>>>>>>> origin/Nhat2
                 phong.getTrangThai(),
                 "Xem Thêm"
             });
@@ -114,6 +154,7 @@ public class PhongGUI extends JPanel {
 
     
     private void addNewRoom() {
+<<<<<<< HEAD
         JTextField txtMaPhong = new JTextField();
         JTextField txtMaLoaiPhong = new JTextField();
         JTextField txtTrangThai = new JTextField();
@@ -146,6 +187,52 @@ public class PhongGUI extends JPanel {
             }
         }
     }
+=======
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        new AddRoomGUI(parentFrame, phongBUS, "Thêm phòng", "add");
+        loadTableData();
+    }
+
+    private void editRoom() {
+        int selectedRow = ContentTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phòng để chỉnh sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    
+        String maPhong = tableModel.getValueAt(selectedRow, 0).toString();
+        String maLP = tableModel.getValueAt(selectedRow, 1).toString();
+        String trangThai = tableModel.getValueAt(selectedRow, 5).toString();
+    
+        PhongDTO phong = new PhongDTO(maPhong, maLP, trangThai);
+    
+        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        new AddRoomGUI(parentFrame, phongBUS, "Chỉnh sửa phòng", "save", phong);
+        loadTableData();
+    }
+
+    private void deleteRoom() {
+        int selectedRow = ContentTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một phòng để xóa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    
+        String maPhong = tableModel.getValueAt(selectedRow, 0).toString();
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa phòng [" + maPhong + "] không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+    
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (phongBUS.deletePhong(maPhong)) {
+                JOptionPane.showMessageDialog(this, "Xóa phòng thành công!");
+                loadTableData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa phòng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    
+>>>>>>> origin/Nhat2
 }
 
 class ButtonRenderer extends JButton implements TableCellRenderer {

@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class Colors {
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 700;
     
     //
     public static final Color WHITE_FONT = new Color(255, 255, 255);
