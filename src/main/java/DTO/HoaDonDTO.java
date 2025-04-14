@@ -1,10 +1,10 @@
-package DTO
+package DTO;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class HoaDonDTO {
     private String MaHoaDon;
-    private String MsNhanVien;
+    private String MaNhanVien;
     private Date NgayTao;
     private double TongTien;
     private double TienTra;
@@ -15,7 +15,7 @@ public class HoaDonDTO {
 
     public HoaDonDTO(String MaHoaDon, String MaNhanVien, Date NgayTAo, double TongTien, double TienTra, double TienThua, String TrangThai) {
         this.MaHoaDon = MaHoaDon;
-        this.MsNhanVien = MaNhanVien;
+        this.MaNhanVien = MaNhanVien;
         this.NgayTao = NgayTAo;
         this.TongTien = TongTien;
         this.TienTra = TienTra;
@@ -26,7 +26,7 @@ public class HoaDonDTO {
     public String getMaHoaDon() { return MaHoaDon;}
     public void setMaHoaDon(String MaHoaDon) { this.MaHoaDon = MaHoaDon;}
 
-    public String getMaNhanVien() { return MsNhanVien;}
+    public String getMaNhanVien() { return MaNhanVien;}
     public void setMaNhanVien(String MaNhanVien) { this.MaNhanVien = MaNhanVien;}
 
     public Date getNgayTao() { return NgayTao;}

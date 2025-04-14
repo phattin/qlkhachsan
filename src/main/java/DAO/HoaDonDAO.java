@@ -1,6 +1,6 @@
 package DAO;
 
-import DTO.HoaDonDTo;
+import DTO.HoaDonDTO;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -15,13 +15,13 @@ public class HoaDonDAO {
         String query = "SELECT * FROM hoadon";
 
         try {
-            Statement stmt = conn,createStatement();
+            Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
             while(rs.next()) {
                 dshoadon.add(new HoaDonDTO(
                     rs.getString("MaHoaDon"),
-                    rs.getString("MsNhanVien"),
+                    rs.getString("MaNhanVien"),
                     rs.getDate("NgayTao"),
                     rs.getDouble("TongTien"),
                     rs.getDouble("TienTra"),
@@ -34,7 +34,7 @@ public class HoaDonDAO {
             stmt.close();
 
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy danh sách hóa đơn:" + e.getMessage())
+            System.err.println("Lỗi khi lấy danh sách hóa đơn:" + e.getMessage());
         }
 
         return dshoadon;
