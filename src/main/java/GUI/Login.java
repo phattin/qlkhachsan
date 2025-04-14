@@ -73,6 +73,7 @@ public class Login extends JFrame {
         Image resizedImgUser = imgUser.getScaledInstance(18, 18, Image.SCALE_SMOOTH);
         userIcon = new ImageIcon(resizedImgUser);
         userField.setIcon(userIcon);
+    
         rightPanel.add(userField);
 
         CustomPasswordField passField = new CustomPasswordField(20);
@@ -84,6 +85,14 @@ public class Login extends JFrame {
         passwordIcon = new ImageIcon(resizedImgPass);
         passField.setIcon(passwordIcon);
         rightPanel.add(passField);
+
+        //Khi ấn enter trong user hay pass
+        userField.addActionListener((ActionEvent e) -> {
+            passField.requestFocusInWindow();
+        });
+        passField.addActionListener((ActionEvent e) -> {
+            checkLogin(userField, passField);
+        });
 
         CustomButton loginButton = new CustomButton("Đăng nhập");
         loginButton.setBounds(30, 300, 250, 40);

@@ -11,10 +11,18 @@
         <exec.mainClass>com.mycompany.qlkhachsan.QLKhachSan</exec.mainClass>
     </properties>
     <dependencies>
+        <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
+        </dependency>
+
+        <!-- JCalendar for JDateChooser -->
+        <dependency>
+            <groupId>com.toedter</groupId>
+            <artifactId>jcalendar</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
     <name>QLKhachSan</name>
