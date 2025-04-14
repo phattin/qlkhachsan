@@ -14,13 +14,7 @@ public class PhongDAO {
 
     public ArrayList<PhongDTO> getALL() {
         ArrayList<PhongDTO> dsphong = new ArrayList<>();
-<<<<<<< HEAD
-        String sql = "SELECT p.MaPhong, p.MaLoaiPhong, lp.TenLoaiPhong, lp.SoGiuong, lp.GiaPhong, p.TrangThai " +
-                     "FROM phong p " +
-                     "JOIN loaiphong lp ON p.MaLoaiPhong = lp.MaLoaiPhong";
-=======
         String sql = "SELECT * FROM phong ";
->>>>>>> origin/Nhat2
     
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -29,14 +23,7 @@ public class PhongDAO {
             while (rs.next()) {
                 dsphong.add(new PhongDTO(
                     rs.getString("MaPhong"),
-<<<<<<< HEAD
-                    rs.getString("MaLoaiPhong"),
-                    rs.getString("TenLoaiPhong"),
-                    rs.getInt("SoGiuong"),  // Lấy tên loại phòng tự động
-                    rs.getInt("GiaPhong"),         // Lấy giá tiền tự động
-=======
                     rs.getString("MaLoaiPhong"),        
->>>>>>> origin/Nhat2
                     rs.getString("TrangThai")
                 ));
             }
@@ -50,38 +37,6 @@ public class PhongDAO {
     
     public int add(PhongDTO obj) {
         int result = 0;
-<<<<<<< HEAD
-        String getLoaiPhongSQL = "SELECT TenLoaiPhong, SoGiuong, GiaPhong FROM loaiphong WHERE MaLoaiPhong = ?";
-        String insertSQL = "INSERT INTO phong (MaPhong, MaLoaiPhong, TrangThai) VALUES (?, ?, ?)";
-    
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmtGet = conn.prepareStatement(getLoaiPhongSQL);
-             PreparedStatement pstmtInsert = conn.prepareStatement(insertSQL)) {
-    
-            // Lấy TenLoaiPhong và GiaTien từ MaLoaiPhong
-            pstmtGet.setString(1, obj.getMaLoaiPhong());
-            ResultSet rs = pstmtGet.executeQuery();
-            if (!rs.next()) {
-                System.err.println("Lỗi: Không tìm thấy loại phòng!");
-                return result;
-            }
-            String tenLoaiPhong = rs.getString("TenLoaiPhong");
-            int soGiuong = rs.getInt("SoGiuong");
-            int giaTien = rs.getInt("GiaPhong");
-    
-            // Chèn dữ liệu vào bảng phòng
-            pstmtInsert.setString(1, obj.getMaPhong());
-            pstmtInsert.setString(2, obj.getMaLoaiPhong());
-            pstmtInsert.setString(3, obj.getTrangThai());
-    
-            result = pstmtInsert.executeUpdate();
-    
-            // Lưu TenLoaiPhong và GiaTien vào obj để hiển thị trên bảng
-            obj.setTenLoaiPhong(tenLoaiPhong);
-            obj.setSoGiuong(soGiuong);
-            obj.setGiaTien(giaTien);
-    
-=======
         String sql = "INSERT INTO phong (MaPhong, MaLoaiPhong, TrangThai) VALUES (?, ?, ?)";
     
         try (Connection conn = DatabaseConnection.getConnection();
@@ -92,19 +47,12 @@ public class PhongDAO {
             pstmt.setString(3, obj.getTrangThai());
     
             result = pstmt.executeUpdate();
->>>>>>> origin/Nhat2
         } catch (SQLException e) {
             System.err.println("Lỗi khi thêm phòng: " + e.getMessage());
         }
         return result;
-<<<<<<< HEAD
-    }
-    
-
-=======
     }    
     
->>>>>>> origin/Nhat2
     public int update(PhongDTO obj) {
         int result = 0;
         String sql = "UPDATE phong SET MaLoaiPhong=?, TrangThai=? WHERE MaPhong=?";

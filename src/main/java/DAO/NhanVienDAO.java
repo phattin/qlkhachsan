@@ -18,7 +18,7 @@ public class NhanVienDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     nvList.add(new NhanVienDTO(
-                        rs.getString("MaNV"),
+                        rs.getString("MaNhanVien"),
                         rs.getString("HoTen"),
                         rs.getString("GioiTinh"),
                         rs.getString("SoDienThoai"),
@@ -44,7 +44,7 @@ public class NhanVienDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new NhanVienDTO(
-                        rs.getString("MaNV"),
+                        rs.getString("MaNhanVien"),
                         rs.getString("HoTen"),
                         rs.getString("GioiTinh"),
                         rs.getString("SoDIenThoai"),
@@ -64,7 +64,7 @@ public class NhanVienDAO {
 
     public boolean add(NhanVienDTO nvDTO) {
         int result = 0;
-        String sql = "INSERT INTO nhanvien (MaNV, HoTen, GioiTinh, SoDienThoai, Email, DiaChi, Luong, NgayNhanViec TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO nhanvien (MaNhanVien, HoTen, GioiTinh, SoDienThoai, Email, DiaChi, Luong, NgayNhanViec TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -90,7 +90,7 @@ public class NhanVienDAO {
 
     public boolean update(NhanVienDTO nvDTO) {
         int result = 0;
-        String sql = "UPDATE nhanvien SET HoTen=?, GioiTinh=?, SoDienThoai=?, Email=?, DiaChi=?, Luong=? WHERE MaNV=?";
+        String sql = "UPDATE nhanvien SET HoTen=?, GioiTinh=?, SoDienThoai=?, Email=?, DiaChi=?, Luong=? WHERE MaNhanVien=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -114,7 +114,7 @@ public class NhanVienDAO {
 
     public boolean delete(String maNhanVien) {
         int result = 0;
-        String sql = "UPDATE nhanvien SET TrangThai = ? WHERE MaNV=?";
+        String sql = "UPDATE nhanvien SET TrangThai = ? WHERE MaNhanVien=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -132,7 +132,7 @@ public class NhanVienDAO {
 
     public String increaseMaNV() {
         String maNV = null;
-        String query = "SELECT MAX(MaNV) AS MaxMaNV FROM nhanvien";
+        String query = "SELECT MAX(MaNhanVien) AS MaxMaNV FROM nhanvien";
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query);
             ResultSet rs = stmt.executeQuery()) {

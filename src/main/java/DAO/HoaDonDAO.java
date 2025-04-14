@@ -10,6 +10,7 @@ public class HoaDonDAO {
     public HoaDonDAO(Connection conn) {
         this.conn = conn;
     }
+
     public ArrayList<HoaDonDTO> getAllHoaDon() {
         ArrayList<HoaDonDTO> dshoadon = new ArrayList<>();
         String query = "SELECT * FROM hoadon";

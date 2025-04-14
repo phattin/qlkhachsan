@@ -2,13 +2,6 @@ package GUI;
 
 import fillter.Button;
 import fillter.Colors;
-<<<<<<< HEAD
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import BUS.KhachHangBUS;
-import DTO.KhachHangDTO;
-=======
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +11,6 @@ import DTO.KhachHangDTO;
 import GUI.Dialog.AddCustomerGUI;
 
 import java.awt.*;
->>>>>>> origin/Nhat2
 import java.util.ArrayList;
 
 public class KhachHangGUI extends JPanel {
@@ -36,20 +28,12 @@ public class KhachHangGUI extends JPanel {
 
         khachHangBUS = new KhachHangBUS();
 
-<<<<<<< HEAD
-=======
         // Header
->>>>>>> origin/Nhat2
         PanelHeader = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         PanelHeader.setBackground(Colors.MAIN_BACKGROUND);
         PanelHeader.setPreferredSize(new Dimension(this.getWidth(), 60));
 
         AddBtn = new Button("menuButton", "Thêm", 120, 30, "/Icon/them_icon.png");
-<<<<<<< HEAD
-        AddBtn.addActionListener(e -> addNewCustomer());
-        
-=======
->>>>>>> origin/Nhat2
         DeleteBtn = new Button("menuButton", "Xóa", 120, 30, "/Icon/xoa_icon.png");
         EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
 
@@ -57,18 +41,11 @@ public class KhachHangGUI extends JPanel {
         txtSearch.setPreferredSize(new Dimension(150, 35));
 
         PanelHeader.add(AddBtn);
-<<<<<<< HEAD
-        PanelHeader.add(DeleteBtn);
-        PanelHeader.add(EditBtn);
-        PanelHeader.add(txtSearch);
-        
-=======
         PanelHeader.add(EditBtn);
         PanelHeader.add(DeleteBtn);
         PanelHeader.add(txtSearch);
 
         // Content
->>>>>>> origin/Nhat2
         PanelContent = new JPanel(new BorderLayout());
         PanelContent.setBackground(Colors.MAIN_BACKGROUND);
 
@@ -86,9 +63,6 @@ public class KhachHangGUI extends JPanel {
         this.add(PanelHeader, BorderLayout.NORTH);
         this.add(PanelContent, BorderLayout.CENTER);
 
-<<<<<<< HEAD
-        loadTableData();
-=======
         // Load table
         loadTableData();
 
@@ -96,17 +70,12 @@ public class KhachHangGUI extends JPanel {
         AddBtn.addActionListener(e -> addNewCustomer());
         EditBtn.addActionListener(e -> editCustomer());
         DeleteBtn.addActionListener(e -> deleteCustomer());
->>>>>>> origin/Nhat2
     }
 
     private void loadTableData() {
         tableModel.setRowCount(0);
         ArrayList<KhachHangDTO> danhSachKhachHang = khachHangBUS.getAllKhachHang();
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> origin/Nhat2
         for (KhachHangDTO kh : danhSachKhachHang) {
             tableModel.addRow(new Object[]{
                 kh.getMaKhachHang(),
@@ -118,45 +87,6 @@ public class KhachHangGUI extends JPanel {
             });
         }
     }
-<<<<<<< HEAD
-    
-    private void addNewCustomer() {
-        JTextField txtMaKH = new JTextField();
-        JTextField txtHoTen = new JTextField();
-        JTextField txtCCCD = new JTextField();
-        JTextField txtSoDienThoai = new JTextField();
-        JTextField txtEmail = new JTextField();
-        JTextField txtDiaChi = new JTextField();
-    
-        JPanel panel = new JPanel(new GridLayout(6, 2));
-        panel.add(new JLabel("Mã KH:")); panel.add(txtMaKH);
-        panel.add(new JLabel("Họ Tên:")); panel.add(txtHoTen);
-        panel.add(new JLabel("CCCD:")); panel.add(txtCCCD);
-        panel.add(new JLabel("Số Điện Thoại:")); panel.add(txtSoDienThoai);
-        panel.add(new JLabel("Email:")); panel.add(txtEmail);
-        panel.add(new JLabel("Địa Chỉ:")); panel.add(txtDiaChi);
-    
-        int result = JOptionPane.showConfirmDialog(null, panel, "Thêm Khách Hàng", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            String maKH = txtMaKH.getText();
-            String hoTen = txtHoTen.getText();
-            String cccd = txtCCCD.getText();
-            String soDienThoai = txtSoDienThoai.getText();
-            String email = txtEmail.getText();
-            String diaChi = txtDiaChi.getText();
-    
-            if (maKH.isEmpty() || hoTen.isEmpty() || cccd.isEmpty() || soDienThoai.isEmpty() || email.isEmpty() || diaChi.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-    
-            KhachHangDTO khachHang = new KhachHangDTO(maKH, hoTen, cccd, soDienThoai, email, diaChi);
-            if (khachHangBUS.addKhachHang(khachHang)) {
-                JOptionPane.showMessageDialog(null, "Thêm khách hàng thành công!");
-                loadTableData();
-            } else {
-                JOptionPane.showMessageDialog(null, "Thêm khách hàng thất bại! Kiểm tra lại dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-=======
 
     private void addNewCustomer() {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -201,7 +131,6 @@ public class KhachHangGUI extends JPanel {
                 loadTableData();
             } else {
                 JOptionPane.showMessageDialog(this, "Xóa khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
->>>>>>> origin/Nhat2
             }
         }
     }

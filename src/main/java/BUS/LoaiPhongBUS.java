@@ -1,8 +1,5 @@
 package BUS;
 
-<<<<<<< HEAD
-public class LoaiPhongBUS {
-=======
 import DAO.LoaiPhongDAO;
 import DTO.LoaiPhongDTO;
 import java.util.ArrayList;
@@ -40,6 +37,5 @@ public class LoaiPhongBUS {
         return loaiPhongDAO.getById(maLoaiPhong);
     }
 
->>>>>>> origin/Nhat2
     
 }

@@ -20,7 +20,7 @@ public class KhachHangDAO {
 
             while (rs.next()) {
                 dskhachhang.add(new KhachHangDTO(
-                    rs.getString("MaKH"),
+                    rs.getString("MaKhachHang"),
                     rs.getString("HoTen"),
                     rs.getString("CCCD"),
                     rs.getString("SoDienThoai"),
@@ -35,31 +35,13 @@ public class KhachHangDAO {
         return dskhachhang;
     }
 
-<<<<<<< HEAD
-    public int add(KhachHangDTO khachHang) {
-=======
     public int add(KhachHangDTO obj) {
->>>>>>> origin/Nhat2
     int result = 0;
-    String insertSQL = "INSERT INTO khachhang (MaKH, HoTen, CCCD, SoDienThoai, Email, DiaChi) VALUES (?, ?, ?, ?, ?, ?)";
+    String insertSQL = "INSERT INTO khachhang (MaKhachHang, HoTen, CCCD, SoDienThoai, Email, DiaChi) VALUES (?, ?, ?, ?, ?, ?)";
 
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement pstmtInsert = conn.prepareStatement(insertSQL)) {
 
-<<<<<<< HEAD
-        // Chèn dữ liệu vào bảng khách hàng
-        pstmtInsert.setString(1, khachHang.getMaKhachHang()); // MaKH
-        pstmtInsert.setString(2, khachHang.getHoTen()); // HoTen
-        pstmtInsert.setString(3, khachHang.getCCCD()); // CCCD
-        pstmtInsert.setString(4, khachHang.getSDT()); // SoDienThoai
-        pstmtInsert.setString(5, khachHang.getEmail()); // Email
-        pstmtInsert.setString(6, khachHang.getDiaChi()); // DiaChi
-
-        // Thực thi câu lệnh SQL và lấy số dòng bị ảnh hưởng
-        result = pstmtInsert.executeUpdate();
-
-        // Nếu có ít nhất một dòng bị ảnh hưởng, có thể xác nhận thêm (trả về 1 hoặc số dòng bị ảnh hưởng)
-=======
         pstmtInsert.setString(1, obj.getMaKhachHang()); 
         pstmtInsert.setString(2, obj.getHoTen()); 
         pstmtInsert.setString(3, obj.getCCCD());
@@ -69,7 +51,6 @@ public class KhachHangDAO {
 
         result = pstmtInsert.executeUpdate();
 
->>>>>>> origin/Nhat2
         if (result > 0) {
             System.out.println("Thêm khách hàng thành công!");
         } else {
@@ -79,26 +60,12 @@ public class KhachHangDAO {
     } catch (SQLException e) {
         System.err.println("Lỗi khi thêm khách hàng: " + e.getMessage());
     }
-<<<<<<< HEAD
-
-    return result;  // Trả về số dòng bị ảnh hưởng, nếu 0 có thể hiểu là không có thay đổi
-}
-
-    
-    
-    
-
-
-
-
-
-=======
         return result; 
     }
 
     public int update(KhachHangDTO obj) {
         int result = 0;
-        String sql = "UPDATE khachhang SET HoTen = ?, CCCD = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKH = ?";
+        String sql = "UPDATE khachhang SET HoTen = ?, CCCD = ?, SoDienThoai = ?, Email = ?, DiaChi = ? WHERE MaKhachHang = ?";
     
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -127,7 +94,7 @@ public class KhachHangDAO {
     
     public int delete(String maKH) {
         int result = 0;
-        String sql = "DELETE FROM khachhang WHERE MaKH = ?";
+        String sql = "DELETE FROM khachhang WHERE MaKhachHang = ?";
     
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -149,7 +116,7 @@ public class KhachHangDAO {
     }
     
     public KhachHangDTO getById(String maKH) {
-        String sql = "SELECT * FROM khachhang WHERE MaKH = ?";
+        String sql = "SELECT * FROM khachhang WHERE MaKhachHang = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
     
@@ -158,7 +125,7 @@ public class KhachHangDAO {
     
             if (rs.next()) {
                 return new KhachHangDTO(
-                    rs.getString("MaKH"),
+                    rs.getString("MaKhachHang"),
                     rs.getString("HoTen"),
                     rs.getString("CCCD"),
                     rs.getString("SoDienThoai"),
@@ -174,5 +141,4 @@ public class KhachHangDAO {
     }
     
     
->>>>>>> origin/Nhat2
 }

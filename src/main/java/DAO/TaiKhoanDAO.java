@@ -20,7 +20,7 @@ public class TaiKhoanDAO {
                     tkList.add(new TaiKhoanDTO(
                         rs.getString("TenDangNhap"),
                         rs.getString("MatKhau"),
-                        rs.getString("MaNV"),
+                        rs.getString("MaNhanVien"),
                         rs.getString("MaChucVu"),
                         rs.getString("TrangThai")
                     ));
@@ -43,7 +43,7 @@ public class TaiKhoanDAO {
                     return new TaiKhoanDTO(
                         rs.getString("TenDangNhap"),
                         rs.getString("MatKhau"),
-                        rs.getString("MaNV"),
+                        rs.getString("MaNhanVien"),
                         rs.getString("MaChucVu"),
                         rs.getString("TrangThai")
                     );
@@ -57,7 +57,7 @@ public class TaiKhoanDAO {
 
     public boolean add(TaiKhoanDTO tkDTO) {
         int result = 0;
-        String sql = "INSERT INTO taikhoan (TenDangNhap, MatKhau, MaNV, MaChucVu, TrangThai) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO taikhoan (TenDangNhap, MatKhau, MaNhanVien, MaChucVu, TrangThai) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -78,7 +78,7 @@ public class TaiKhoanDAO {
 
     public boolean update(TaiKhoanDTO tkDTO) {
         int result = 0;
-        String sql = "UPDATE taikhoan SET MatKhau=?, MaNV=?, MaChucVu=? WHERE TenDangNhap=?";
+        String sql = "UPDATE taikhoan SET MatKhau=?, MaNhanVien=?, MaChucVu=? WHERE TenDangNhap=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -98,7 +98,7 @@ public class TaiKhoanDAO {
 
     public boolean delete(String maNhanVien) {
         int result = 0;
-        String sql = "UPDATE taikhoan SET TrangThai = ? WHERE MaNV=?";
+        String sql = "UPDATE taikhoan SET TrangThai = ? WHERE MaNhanVien=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(sql)) {

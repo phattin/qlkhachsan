@@ -61,8 +61,5 @@ public class DatPhongDTO {
         this.ngayTraPhong = ngayTraPhong;
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/Nhat2
 }

@@ -53,8 +53,8 @@ public class ChucVuDAO {
     public static ChucVuDTO getChucVuByMaNhanVien(String maNhanVien) {
         String query = "SELECT * FROM chucvu"
         + " JOIN taikhoan ON chucvu.MaChucVu = taikhoan.MaChucVu"
-        + " JOIN nhanvien ON taikhoan.MaNV = nhanvien.MaNV"
-        + " WHERE taikhoan.MaNV = ? AND taikhoan.TrangThai = 'Hiện'";
+        + " JOIN nhanvien ON taikhoan.MaNhanVien = nhanvien.MaNhanVien"
+        + " WHERE taikhoan.MaNhanVien = ? AND taikhoan.TrangThai = 'Hiện'";
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, maNhanVien);
@@ -95,7 +95,7 @@ public class ChucVuDAO {
 
     public boolean update(ChucVuDTO cvDTO) {
         int result = 0;
-        String sql = "UPDATE phong SET MatKhau=?, MaNV=?, MaChucVu=? WHERE TenDangNhap=?";
+        String sql = "UPDATE phong SET MatKhau=?, MaNhanVien=?, MaChucVu=? WHERE TenDangNhap=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
