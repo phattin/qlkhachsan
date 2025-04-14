@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 25, 2025 lúc 03:05 AM
+-- Thời gian đã tạo: Th4 14, 2025 lúc 09:44 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -29,18 +29,24 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `chucnang` (
   `MaChucNang` varchar(10) NOT NULL,
-  `TenChucNang` enum('Thêm','Sửa','Xóa') NOT NULL,
-  `MaChucVu` varchar(10) DEFAULT NULL
+  `TenChucNang` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `chucnang`
 --
 
-INSERT INTO `chucnang` (`MaChucNang`, `TenChucNang`, `MaChucVu`) VALUES
-('CN001', '', 'CV002'),
-('CN002', '', 'CV001'),
-('CN003', '', 'CV001');
+INSERT INTO `chucnang` (`MaChucNang`, `TenChucNang`) VALUES
+('CN001', 'Trang chủ'),
+('CN002', 'Quản lý phòng'),
+('CN003', 'Đặt phòng'),
+('CN004', 'Quản lý khách hàng'),
+('CN005', 'Quản lý nhân viên'),
+('CN006', 'Quản lý tài khoản'),
+('CN007', 'Quản lý phân quyền'),
+('CN008', 'Quản lý hóa đơn'),
+('CN009', 'Quản lý dịch vụ'),
+('CN010', 'Thống kê');
 
 -- --------------------------------------------------------
 
@@ -50,16 +56,17 @@ INSERT INTO `chucnang` (`MaChucNang`, `TenChucNang`, `MaChucVu`) VALUES
 
 CREATE TABLE `chucvu` (
   `MaChucVu` varchar(10) NOT NULL,
-  `TenChucVu` varchar(50) NOT NULL
+  `TenChucVu` varchar(50) NOT NULL,
+  `TrangThai` enum('Ẩn','Hiện') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `chucvu`
 --
 
-INSERT INTO `chucvu` (`MaChucVu`, `TenChucVu`) VALUES
-('CV001', 'Quản lý'),
-('CV002', 'Nhân viên');
+INSERT INTO `chucvu` (`MaChucVu`, `TenChucVu`, `TrangThai`) VALUES
+('CV001', 'Quản lý', 'Hiện'),
+('CV002', 'Nhân viên', 'Hiện');
 
 -- --------------------------------------------------------
 
@@ -82,7 +89,7 @@ CREATE TABLE `danhsachphong` (
 CREATE TABLE `datphong` (
   `MaDatPhong` varchar(10) NOT NULL,
   `MaPhong` varchar(10) DEFAULT NULL,
-  `MaKH` varchar(10) DEFAULT NULL,
+  `MaKhachHang` varchar(10) DEFAULT NULL,
   `NgayNhanPhong` date NOT NULL,
   `NgayTraPhong` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -91,9 +98,8 @@ CREATE TABLE `datphong` (
 -- Đang đổ dữ liệu cho bảng `datphong`
 --
 
-INSERT INTO `datphong` (`MaDatPhong`, `MaPhong`, `MaKH`, `NgayNhanPhong`, `NgayTraPhong`) VALUES
+INSERT INTO `datphong` (`MaDatPhong`, `MaPhong`, `MaKhachHang`, `NgayNhanPhong`, `NgayTraPhong`) VALUES
 ('DP001', 'P001', 'KH001', '2025-03-25', '2025-03-27');
-
 
 -- --------------------------------------------------------
 
@@ -118,8 +124,6 @@ INSERT INTO `dichvu` (`MaDV`, `TenDV`, `GiaDV`) VALUES
 ('DV004', 'Hồ bơi', 20000),
 ('DV005', 'Spa & thư giãn', 20000);
 
-
-
 -- --------------------------------------------------------
 
 --
@@ -127,9 +131,10 @@ INSERT INTO `dichvu` (`MaDV`, `TenDV`, `GiaDV`) VALUES
 --
 
 CREATE TABLE `hoadon` (
-  `MaHD` varchar(10) NOT NULL,
+  `MaHoaDon` varchar(10) NOT NULL,
   `MaDatPhong` varchar(10) DEFAULT NULL,
-  `MaKH` varchar(10) DEFAULT NULL,
+  `MaKhachHang` varchar(10) DEFAULT NULL,
+  `MaNhanVien` varchar(10) NOT NULL,
   `NgayLap` date NOT NULL,
   `TongTien` int(10) NOT NULL,
   `TienTra` int(10) NOT NULL,
@@ -141,8 +146,8 @@ CREATE TABLE `hoadon` (
 -- Đang đổ dữ liệu cho bảng `hoadon`
 --
 
-INSERT INTO `hoadon` (`MaHD`, `MaDatPhong`, `MaKH`, `NgayLap`, `TongTien`, `TienTra`, `TienThua`, `TrangThai`) VALUES
-('HD001', 'DP001', 'KH001', '2025-03-25', 600000, 600000, 0, 'Đã thanh toán');
+INSERT INTO `hoadon` (`MaHoaDon`, `MaDatPhong`, `MaKhachHang`, `MaNhanVien`, `NgayLap`, `TongTien`, `TienTra`, `TienThua`, `TrangThai`) VALUES
+('HD001', 'DP001', 'KH001', 'NV001', '2025-03-25', 600000, 600000, 0, 'Đã thanh toán');
 
 -- --------------------------------------------------------
 
@@ -151,7 +156,7 @@ INSERT INTO `hoadon` (`MaHD`, `MaDatPhong`, `MaKH`, `NgayLap`, `TongTien`, `Tien
 --
 
 CREATE TABLE `khachhang` (
-  `MaKH` varchar(10) NOT NULL,
+  `MaKhachHang` varchar(10) NOT NULL,
   `HoTen` varchar(100) NOT NULL,
   `CCCD` varchar(20) NOT NULL,
   `SoDienThoai` varchar(15) DEFAULT NULL,
@@ -163,7 +168,7 @@ CREATE TABLE `khachhang` (
 -- Đang đổ dữ liệu cho bảng `khachhang`
 --
 
-INSERT INTO `khachhang` (`MaKH`, `HoTen`, `CCCD`, `SoDienThoai`, `Email`, `DiaChi`) VALUES
+INSERT INTO `khachhang` (`MaKhachHang`, `HoTen`, `CCCD`, `SoDienThoai`, `Email`, `DiaChi`) VALUES
 ('KH001', 'Le Van C', '123456789012', '0912345678', 'lvc@example.com', 'Hà Nội'),
 ('KH002', 'Pham Thi D', '098765432109', '0908765432', 'ptd@example.com', 'TP. HCM');
 
@@ -195,11 +200,12 @@ INSERT INTO `loaiphong` (`MaLoaiPhong`, `TenLoaiPhong`, `SoGiuong`, `GiaPhong`) 
 --
 
 CREATE TABLE `nhanvien` (
-  `MaNV` varchar(10) NOT NULL,
+  `MaNhanVien` varchar(10) NOT NULL,
   `HoTen` varchar(100) NOT NULL,
   `GioiTinh` enum('Nam','Nữ') DEFAULT NULL,
   `SoDienThoai` varchar(15) DEFAULT NULL,
   `Email` varchar(100) DEFAULT NULL,
+  `DiaChi` varchar(255) NOT NULL,
   `Luong` int(10) NOT NULL,
   `NgayNhanViec` date NOT NULL,
   `TrangThai` varchar(50) NOT NULL
@@ -209,9 +215,38 @@ CREATE TABLE `nhanvien` (
 -- Đang đổ dữ liệu cho bảng `nhanvien`
 --
 
-INSERT INTO `nhanvien` (`MaNV`, `HoTen`, `GioiTinh`, `SoDienThoai`, `Email`, `Luong`, `NgayNhanViec`, `TrangThai`) VALUES
-('NV001', 'Nguyen Van A', 'Nam', '0123456789', 'nva@example.com', 10000000, '2023-01-15', 'Đang làm'),
-('NV002', 'Tran Thi B', 'Nữ', '0987654321', 'ttb@example.com', 8000000, '2023-05-20', 'Đã nghỉ');
+INSERT INTO `nhanvien` (`MaNhanVien`, `HoTen`, `GioiTinh`, `SoDienThoai`, `Email`, `DiaChi`, `Luong`, `NgayNhanViec`, `TrangThai`) VALUES
+('NV001', 'Nguyen Van A', 'Nam', '0123456789', 'nva@example.com', 'Quận 5', 10000000, '2023-01-15', 'Hiện'),
+('NV002', 'Tran Thi B', 'Nữ', '0987654321', 'ttb@example.com', 'Quận 8', 8000000, '2023-05-20', 'Hiện');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `phanquyen`
+--
+
+CREATE TABLE `phanquyen` (
+  `MaChucVu` varchar(10) NOT NULL,
+  `MaChucNang` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `phanquyen`
+--
+
+INSERT INTO `phanquyen` (`MaChucVu`, `MaChucNang`) VALUES
+('CV001', 'CN001'),
+('CV001', 'CN002'),
+('CV001', 'CN003'),
+('CV001', 'CN004'),
+('CV001', 'CN005'),
+('CV001', 'CN006'),
+('CV001', 'CN007'),
+('CV001', 'CN008'),
+('CV001', 'CN009'),
+('CV001', 'CN010'),
+('CV002', 'CN003'),
+('CV002', 'CN008');
 
 -- --------------------------------------------------------
 
@@ -262,7 +297,7 @@ INSERT INTO `sudungdichvu` (`MaSuDungDV`, `MaDatPhong`, `MaDV`, `SoLuong`) VALUE
 
 CREATE TABLE `taikhoan` (
   `MaTK` varchar(10) NOT NULL,
-  `MaNV` varchar(10) DEFAULT NULL,
+  `MaNhanVien` varchar(10) DEFAULT NULL,
   `MaChucVu` varchar(10) DEFAULT NULL,
   `TenDangNhap` varchar(50) NOT NULL,
   `MatKhau` varchar(255) NOT NULL,
@@ -273,7 +308,7 @@ CREATE TABLE `taikhoan` (
 -- Đang đổ dữ liệu cho bảng `taikhoan`
 --
 
-INSERT INTO `taikhoan` (`MaTK`, `MaNV`, `MaChucVu`, `TenDangNhap`, `MatKhau`, `TrangThai`) VALUES
+INSERT INTO `taikhoan` (`MaTK`, `MaNhanVien`, `MaChucVu`, `TenDangNhap`, `MatKhau`, `TrangThai`) VALUES
 ('TK001', 'NV001', 'CV001', 'admin', '123456', 'Hiện'),
 ('TK002', 'NV002', 'CV002', 'user01', 'password', 'Hiện');
 
@@ -285,8 +320,7 @@ INSERT INTO `taikhoan` (`MaTK`, `MaNV`, `MaChucVu`, `TenDangNhap`, `MatKhau`, `T
 -- Chỉ mục cho bảng `chucnang`
 --
 ALTER TABLE `chucnang`
-  ADD PRIMARY KEY (`MaChucNang`),
-  ADD KEY `MaChucVu` (`MaChucVu`);
+  ADD PRIMARY KEY (`MaChucNang`);
 
 --
 -- Chỉ mục cho bảng `chucvu`
@@ -308,7 +342,7 @@ ALTER TABLE `danhsachphong`
 ALTER TABLE `datphong`
   ADD PRIMARY KEY (`MaDatPhong`),
   ADD KEY `MaPhong` (`MaPhong`),
-  ADD KEY `MaKH` (`MaKH`);
+  ADD KEY `MaKH` (`MaKhachHang`);
 
 --
 -- Chỉ mục cho bảng `dichvu`
@@ -320,15 +354,16 @@ ALTER TABLE `dichvu`
 -- Chỉ mục cho bảng `hoadon`
 --
 ALTER TABLE `hoadon`
-  ADD PRIMARY KEY (`MaHD`),
+  ADD PRIMARY KEY (`MaHoaDon`),
   ADD KEY `MaDatPhong` (`MaDatPhong`),
-  ADD KEY `MaKH` (`MaKH`);
+  ADD KEY `MaKH` (`MaKhachHang`),
+  ADD KEY `hoadon_ibfk_3` (`MaNhanVien`);
 
 --
 -- Chỉ mục cho bảng `khachhang`
 --
 ALTER TABLE `khachhang`
-  ADD PRIMARY KEY (`MaKH`),
+  ADD PRIMARY KEY (`MaKhachHang`),
   ADD UNIQUE KEY `CCCD` (`CCCD`);
 
 --
@@ -341,7 +376,14 @@ ALTER TABLE `loaiphong`
 -- Chỉ mục cho bảng `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  ADD PRIMARY KEY (`MaNV`);
+  ADD PRIMARY KEY (`MaNhanVien`);
+
+--
+-- Chỉ mục cho bảng `phanquyen`
+--
+ALTER TABLE `phanquyen`
+  ADD KEY `fk_chucvu_phanquyen` (`MaChucVu`),
+  ADD KEY `fk_chucnang` (`MaChucNang`);
 
 --
 -- Chỉ mục cho bảng `phong`
@@ -364,18 +406,12 @@ ALTER TABLE `sudungdichvu`
 ALTER TABLE `taikhoan`
   ADD PRIMARY KEY (`MaTK`),
   ADD UNIQUE KEY `TenDangNhap` (`TenDangNhap`),
-  ADD KEY `MaNV` (`MaNV`),
+  ADD KEY `MaNV` (`MaNhanVien`),
   ADD KEY `MaChucVu` (`MaChucVu`);
 
 --
 -- Các ràng buộc cho các bảng đã đổ
 --
-
---
--- Các ràng buộc cho bảng `chucnang`
---
-ALTER TABLE `chucnang`
-  ADD CONSTRAINT `chucnang_ibfk_1` FOREIGN KEY (`MaChucVu`) REFERENCES `chucvu` (`MaChucVu`);
 
 --
 -- Các ràng buộc cho bảng `danhsachphong`
@@ -388,7 +424,7 @@ ALTER TABLE `danhsachphong`
 -- Các ràng buộc cho bảng `datphong`
 --
 ALTER TABLE `datphong`
-  ADD CONSTRAINT `datphong_ibfk_1` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`),
+  ADD CONSTRAINT `datphong_ibfk_1` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`),
   ADD CONSTRAINT `datphong_ibfk_2` FOREIGN KEY (`MaPhong`) REFERENCES `phong` (`MaPhong`);
 
 --
@@ -396,7 +432,15 @@ ALTER TABLE `datphong`
 --
 ALTER TABLE `hoadon`
   ADD CONSTRAINT `hoadon_ibfk_1` FOREIGN KEY (`MaDatPhong`) REFERENCES `datphong` (`MaDatPhong`),
-  ADD CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`MaKH`) REFERENCES `khachhang` (`MaKH`);
+  ADD CONSTRAINT `hoadon_ibfk_2` FOREIGN KEY (`MaKhachHang`) REFERENCES `khachhang` (`MaKhachHang`),
+  ADD CONSTRAINT `hoadon_ibfk_3` FOREIGN KEY (`MaNhanVien`) REFERENCES `nhanvien` (`MaNhanVien`);
+
+--
+-- Các ràng buộc cho bảng `phanquyen`
+--
+ALTER TABLE `phanquyen`
+  ADD CONSTRAINT `fk_chucnang_phanquyen` FOREIGN KEY (`MaChucNang`) REFERENCES `chucnang` (`MaChucNang`),
+  ADD CONSTRAINT `fk_chucvu_phanquyen` FOREIGN KEY (`MaChucVu`) REFERENCES `chucvu` (`MaChucVu`);
 
 --
 -- Các ràng buộc cho bảng `phong`
@@ -415,7 +459,7 @@ ALTER TABLE `sudungdichvu`
 -- Các ràng buộc cho bảng `taikhoan`
 --
 ALTER TABLE `taikhoan`
-  ADD CONSTRAINT `taikhoan_ibfk_1` FOREIGN KEY (`MaNV`) REFERENCES `nhanvien` (`MaNV`),
+  ADD CONSTRAINT `taikhoan_ibfk_1` FOREIGN KEY (`MaNhanVien`) REFERENCES `nhanvien` (`MaNhanVien`),
   ADD CONSTRAINT `taikhoan_ibfk_2` FOREIGN KEY (`MaChucVu`) REFERENCES `chucvu` (`MaChucVu`);
 COMMIT;
 

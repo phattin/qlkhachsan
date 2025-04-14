@@ -169,7 +169,7 @@ public final class MainLayout extends JFrame {
                     case "Đặt phòng" -> new DatPhongGUI();
                     case "Khách hàng" -> new KhachHangGUI();
                     case "Nhân viên" -> new NhanVienGUI();
-                    // case "Tài khoản" -> new TaiKhoanGUI();
+                    case "Tài khoản" -> new TaiKhoanGUI();
                     // case "Phân quyền" -> new PhanQuyenGUI();
                     // case "Hóa đơn" -> new HoaDonGUI();
                     // case "Dịch vụ" -> new DichVuGUI();
@@ -226,6 +226,4 @@ public final class MainLayout extends JFrame {
         Button.selectedButton = selectedBtn;
     }
 
-    public static void main(String args[]) {
-    }
 }

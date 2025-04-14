@@ -37,7 +37,7 @@ public class NhanVienDAO {
     }
 
     public static NhanVienDTO getNhanVienByMa(String maNhanVien) {
-        String query = "SELECT * FROM nhanvien WHERE TrangThai = 'Hiện'";
+        String query = "SELECT * FROM nhanvien WHERE MaNhanVien = ? AND TrangThai = 'Hiện'";
         try (Connection conn = DatabaseConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, maNhanVien);
@@ -64,7 +64,7 @@ public class NhanVienDAO {
 
     public boolean add(NhanVienDTO nvDTO) {
         int result = 0;
-        String sql = "INSERT INTO nhanvien (MaNhanVien, HoTen, GioiTinh, SoDienThoai, Email, DiaChi, Luong, NgayNhanViec TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO nhanvien (MaNhanVien, HoTen, GioiTinh, SoDienThoai, Email, DiaChi, Luong, NgayNhanViec, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

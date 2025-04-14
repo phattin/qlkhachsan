@@ -9,9 +9,13 @@ import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.function.BiConsumer;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -144,88 +148,121 @@ public class NhanVienGUI extends JPanel {
     }
     
     private void themNhanVien() {
-        JTextField txtMaNV = new JTextField();
-        txtMaNV.setText(nvBUS.increaseMaNV()); // Tạo mã NV tự động
-        txtMaNV.setEditable(false); // Mã NV không thể chỉnh sửa
+        // Tạo các field
+        JTextField txtMaNV = new JTextField(nvBUS.increaseMaNV()); 
+        txtMaNV.setEditable(false);
         JTextField txtHoTen = new JTextField();
         JComboBox<String> cbGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
         JTextField txtSDT = new JTextField();
         JTextField txtEmail = new JTextField();
         JTextField txtDiaChi = new JTextField();
         JTextField txtLuong = new JTextField();
-        //Chọn ngày
-        JDateChooser dateChooser = new JDateChooser();
-        dateChooser.setDate(new java.util.Date()); // Gán ngày mặc định (ngày hiện tại)
-        dateChooser.setDateFormatString("yyyy-MM-dd"); // Định dạng hiển thị ngày
-        // Vô hiệu hóa chỉnh sửa trong text field bên trong JDateChooser
-        JTextField dateEditor = ((JTextField) dateChooser.getDateEditor().getUiComponent());
-        dateEditor.setEditable(false);  // Không cho người dùng chỉnh sửa bằng tay
-
+        
+        // Chọn ngày
+        JDateChooser dateChooser = new JDateChooser(); 
+        dateChooser.setDate(new Date());
+        dateChooser.setDateFormatString("yyyy-MM-dd");  // Định dạng ngày là yyyy-MM-dd
+        ((JTextField) dateChooser.getDateEditor().getUiComponent()).setEditable(false);  // Vô hiệu hóa chỉnh sửa thủ công
+    
         JTextField txtUsername = new JTextField();
         JTextField txtPassword = new JTextField();
-        //Tạo các dữ liệu cho chức vụ
+    
+        // Tạo danh sách chức vụ
         ArrayList<ChucVuDTO> dsChucVu = ChucVuBUS.getAllChucVu();
-        String[] dsTenChucVu = new String[dsChucVu.size()];
-        for (int i = 0; i < dsChucVu.size(); i++) {
-            dsTenChucVu[i] = dsChucVu.get(i).getTenChucVu();
-        }
+        String[] dsTenChucVu = dsChucVu.stream().map(ChucVuDTO::getTenChucVu).toArray(String[]::new);
         JComboBox<String> cbChucVu = new JComboBox<>(dsTenChucVu);
     
-        JPanel panel = new JPanel(new GridLayout(11, 2));
-        panel.add(new JLabel("Mã NV:")); panel.add(txtMaNV);
-        panel.add(new JLabel("Họ Tên:")); panel.add(txtHoTen);
-        panel.add(new JLabel("GioiTinh:")); panel.add(cbGioiTinh);
-        panel.add(new JLabel("Số Điện Thoại:")); panel.add(txtSDT);
-        panel.add(new JLabel("Email:")); panel.add(txtEmail);
-        panel.add(new JLabel("Địa Chỉ:")); panel.add(txtDiaChi);
-        panel.add(new JLabel("Lương:")); panel.add(txtLuong);
-        panel.add(new JLabel("Ngày Nhận Việc:")); panel.add(dateChooser);
-        panel.add(new JLabel("Username:")); panel.add(txtUsername);
-        panel.add(new JLabel("Password:")); panel.add(txtPassword);
-        panel.add(new JLabel("Chức Vụ:")); panel.add(cbChucVu);
-        while (true){
-            try{
-                int result = JOptionPane.showConfirmDialog(null, panel, "Thêm Khách Hàng", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    String maKH = txtMaNV.getText();
-                    String hoTen = txtHoTen.getText();
-                    String gioiTinh = cbGioiTinh.getSelectedItem().toString();
-                    String sdt = txtSDT.getText();
-                    String email = txtEmail.getText();
-                    String diaChi = txtDiaChi.getText();
-                    String luong = txtLuong.getText();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String ngayNhanViec = sdf.format(dateChooser.getDate());
-                    String username = txtUsername.getText();
-                    String password = txtPassword.getText();
-                    String maChucVu = dsChucVu.get(cbChucVu.getSelectedIndex()).getMaChucVu();
-            
-                    if (maKH.isEmpty() || hoTen.isEmpty() || gioiTinh.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty() || luong.isEmpty() || ngayNhanViec.isEmpty() || username.isEmpty() || password.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        continue;
-                    }
-                    NhanVienDTO nv = new NhanVienDTO(maKH, hoTen, gioiTinh, sdt, email, diaChi, Long.parseLong(luong), ngayNhanViec, "Hiện");
-                    TaiKhoanDTO tk = new TaiKhoanDTO(username, password, maKH, maChucVu, "Hiện");
-                    if (!nvBUS.checkTextAdd(hoTen, sdt, email, diaChi, Long.parseLong(luong)) || !tkBUS.checkTextAdd(username, password))
-                        continue;
-                    if (nvBUS.add(nv) && tkBUS.add(tk)) {
-                        JOptionPane.showMessageDialog(null, "Thêm nhân viên và tài khoản thành công!");
-                        loadTableData();
-                        break;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Thêm nhân viên và tài khoản thất bại! Kiểm tra lại dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    }
+        // Tạo panel chứa các dòng input
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(0, 2, 10, 10)); // 0 dòng, 2 cột, khoảng cách giữa các ô
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+    
+        // Hàm tiện để tạo dòng có label và field
+        BiConsumer<String, JComponent> addRow = (labelText, inputField) -> {
+            inputPanel.add(new JLabel(labelText));
+            inputField.setPreferredSize(new Dimension(250, 25));
+            inputPanel.add(inputField);
+        };
+    
+        // Thêm các trường vào panel
+        addRow.accept("Mã NV:", txtMaNV);
+        addRow.accept("Họ Tên:", txtHoTen);
+        addRow.accept("Giới Tính:", cbGioiTinh);
+        addRow.accept("SĐT:", txtSDT);
+        addRow.accept("Email:", txtEmail);
+        addRow.accept("Địa Chỉ:", txtDiaChi);
+        addRow.accept("Lương:", txtLuong);
+        addRow.accept("Ngày Nhận Việc:", dateChooser);
+        addRow.accept("Username:", txtUsername);
+        addRow.accept("Password:", txtPassword);
+        addRow.accept("Chức Vụ:", cbChucVu);
+    
+        // Nút
+        Button btnOk = new Button("confirm", "Xác nhận", 120, 35, null);
+        Button btnCancel = new Button("cancel", "Hủy", 120, 35, null);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(btnOk);
+        buttonPanel.add(btnCancel);
+    
+        // Tạo dialog
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Thêm Nhân Viên");
+        dialog.setModal(true);
+        dialog.setSize(500, 600);
+        dialog.setLocationRelativeTo(null);
+        dialog.setLayout(new BorderLayout());
+    
+        dialog.add(inputPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+    
+        // Sự kiện
+        btnCancel.addActionListener(e -> dialog.dispose());
+    
+        btnOk.addActionListener(e -> {
+            try {
+                String maKH = txtMaNV.getText();
+                String hoTen = txtHoTen.getText();
+                String gioiTinh = cbGioiTinh.getSelectedItem().toString();
+                String sdt = txtSDT.getText();
+                String email = txtEmail.getText();
+                String diaChi = txtDiaChi.getText();
+                String luong = txtLuong.getText();
+                String ngayNhanViec = new SimpleDateFormat("yyyy-MM-dd").format(dateChooser.getDate());
+                String username = txtUsername.getText();
+                String password = txtPassword.getText();
+                String maChucVu = dsChucVu.get(cbChucVu.getSelectedIndex()).getMaChucVu();
+    
+                if (hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty() || luong.isEmpty() || username.isEmpty() || password.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                else
-                    break;
-                }catch (NumberFormatException e){
-                    JOptionPane.showMessageDialog(null, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    
+                NhanVienDTO nv = new NhanVienDTO(maKH, hoTen, gioiTinh, sdt, email, diaChi, Long.parseLong(luong), ngayNhanViec, "Hiện");
+                TaiKhoanDTO tk = new TaiKhoanDTO(username, password, maKH, maChucVu, "Hiện");
+    
+                if (!nvBUS.checkTextAdd(hoTen, sdt, email, diaChi, Long.parseLong(luong)) ||
+                    !tkBUS.checkTextAdd(username, password)) {
+                    return;
                 }
-        }
+    
+                if (nvBUS.add(nv) && tkBUS.add(tk)) {
+                    JOptionPane.showMessageDialog(dialog, "Thêm nhân viên và tài khoản thành công!");
+                    dialog.dispose();
+                    loadTableData();
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Thêm thất bại! Kiểm tra dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    
+        dialog.setVisible(true);
     }
 
     private void suaNhanVien() {
-        JTextField txtMaNV = new JTextField();
+        // Tạo các field
+        JTextField txtMaNV = new JTextField(); 
         txtMaNV.setEditable(false); // Mã NV không thể chỉnh sửa
         JTextField txtHoTen = new JTextField();
         JComboBox<String> cbGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
@@ -233,31 +270,28 @@ public class NhanVienGUI extends JPanel {
         JTextField txtEmail = new JTextField();
         JTextField txtDiaChi = new JTextField();
         JTextField txtLuong = new JTextField();
-        //Chọn ngày
-        JDateChooser dateChooser = new JDateChooser();
-        dateChooser.setDate(new java.util.Date()); // Gán ngày mặc định (ngày hiện tại)
-        dateChooser.setDateFormatString("yyyy-MM-dd"); // Định dạng hiển thị ngày
-        // Vô hiệu hóa chỉnh sửa trong text field bên trong JDateChooser
-        JTextField dateEditor = ((JTextField) dateChooser.getDateEditor().getUiComponent());
-        dateEditor.setEditable(false);  // Không cho người dùng chỉnh sửa bằng tay
-
-        //Tạo các dữ liệu cho chức vụ
+        
+        // Chọn ngày
+        JDateChooser dateChooser = new JDateChooser(); 
+        dateChooser.setDate(new Date());
+        dateChooser.setDateFormatString("yyyy-MM-dd");  // Định dạng ngày là yyyy-MM-dd
+        ((JTextField) dateChooser.getDateEditor().getUiComponent()).setEditable(false);  // Vô hiệu hóa chỉnh sửa thủ công
+    
+        // Tạo danh sách chức vụ
         ArrayList<ChucVuDTO> dsChucVu = ChucVuBUS.getAllChucVu();
-        String[] dsTenChucVu = new String[dsChucVu.size()];
-        for (int i = 0; i < dsChucVu.size(); i++) {
-            dsTenChucVu[i] = dsChucVu.get(i).getTenChucVu();
-        }
+        String[] dsTenChucVu = dsChucVu.stream().map(ChucVuDTO::getTenChucVu).toArray(String[]::new);
         JComboBox<String> cbChucVu = new JComboBox<>(dsTenChucVu);
     
+        // Lấy dữ liệu từ bảng để chỉnh sửa
         int selectedRow = ContentTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên để sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        //Lấy và gán thông tin nhân viên từ bảng
+        // Gán dữ liệu cho các trường
         txtMaNV.setText(ContentTable.getValueAt(selectedRow, 0).toString());
         txtHoTen.setText(ContentTable.getValueAt(selectedRow, 1).toString());
-        cbGioiTinh.setSelectedItem((ContentTable.getValueAt(selectedRow, 2).toString()));
+        cbGioiTinh.setSelectedItem(ContentTable.getValueAt(selectedRow, 2).toString());
         txtSDT.setText(ContentTable.getValueAt(selectedRow, 3).toString());
         txtEmail.setText(ContentTable.getValueAt(selectedRow, 4).toString());
         txtDiaChi.setText(ContentTable.getValueAt(selectedRow, 5).toString());
@@ -270,51 +304,82 @@ public class NhanVienGUI extends JPanel {
             e.printStackTrace();
             return;
         }
-
-        //Tạo panel để hiển thị thông tin nhân viên
-        JPanel panel = new JPanel(new GridLayout(8, 2));
-        panel.add(new JLabel("Mã NV:")); panel.add(txtMaNV);
-        panel.add(new JLabel("Họ Tên:")); panel.add(txtHoTen);
-        panel.add(new JLabel("GioiTinh:")); panel.add(cbGioiTinh);
-        panel.add(new JLabel("Số Điện Thoại:")); panel.add(txtSDT);
-        panel.add(new JLabel("Email:")); panel.add(txtEmail);
-        panel.add(new JLabel("Địa Chỉ:")); panel.add(txtDiaChi);
-        panel.add(new JLabel("Lương:")); panel.add(txtLuong);
-        panel.add(new JLabel("Ngày Nhận Việc:")); panel.add(dateChooser);
-        while (true){
-            try{
-                int result = JOptionPane.showConfirmDialog(null, panel, "Sửa Khách Hàng", JOptionPane.OK_CANCEL_OPTION);
-                if (result == JOptionPane.OK_OPTION) {
-                    String maKH = txtMaNV.getText();
-                    String hoTen = txtHoTen.getText();
-                    String gioiTinh = (String) cbGioiTinh.getSelectedItem();
-                    String sdt = txtSDT.getText();
-                    String email = txtEmail.getText();
-                    String diaChi = txtDiaChi.getText();
-                    String luong = txtLuong.getText();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String ngayNhanViec = sdf.format(dateChooser.getDate());
-            
-                    if (maKH.isEmpty() || hoTen.isEmpty() || gioiTinh.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty() || luong.isEmpty() || ngayNhanViec.isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        continue;
-                    }
-            
-                    NhanVienDTO nv = new NhanVienDTO(maKH, hoTen, gioiTinh, sdt, email, diaChi, Long.parseLong(luong), ngayNhanViec, "Hiện");
-                    if (nvBUS.update(nv)) {
-                        JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công!");
-                        loadTableData();
-                        break;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Sửa nhân viên thất bại! Kiểm tra lại dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    }
+    
+        // Tạo panel chứa các dòng input
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(0, 2, 10, 10)); // 0 dòng, 2 cột, khoảng cách giữa các ô
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+    
+        // Hàm tiện để tạo dòng có label và field
+        BiConsumer<String, JComponent> addRow = (labelText, inputField) -> {
+            inputPanel.add(new JLabel(labelText));
+            inputField.setPreferredSize(new Dimension(250, 20)); 
+            inputPanel.add(inputField);
+        };
+    
+        // Thêm các trường vào panel
+        addRow.accept("Mã NV:", txtMaNV);
+        addRow.accept("Họ Tên:", txtHoTen);
+        addRow.accept("Giới Tính:", cbGioiTinh);
+        addRow.accept("SĐT:", txtSDT);
+        addRow.accept("Email:", txtEmail);
+        addRow.accept("Địa Chỉ:", txtDiaChi);
+        addRow.accept("Lương:", txtLuong);
+        addRow.accept("Ngày Nhận Việc:", dateChooser);
+        addRow.accept("Chức Vụ:", cbChucVu);
+    
+        // Nút
+        Button btnOk = new Button("confirm", "Xác nhận", 120, 35, null);
+        Button btnCancel = new Button("cancel", "Hủy", 120, 35, null);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(btnOk);
+        buttonPanel.add(btnCancel);
+    
+        // Tạo dialog
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Sửa Nhân Viên");
+        dialog.setModal(true);
+        dialog.setSize(500, 550);
+        dialog.setLocationRelativeTo(null);
+        dialog.setLayout(new BorderLayout());
+    
+        dialog.add(inputPanel, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+    
+        // Sự kiện
+        btnCancel.addActionListener(e -> dialog.dispose());
+    
+        btnOk.addActionListener(e -> {
+            try {
+                String maNV = txtMaNV.getText();
+                String hoTen = txtHoTen.getText();
+                String gioiTinh = cbGioiTinh.getSelectedItem().toString();
+                String sdt = txtSDT.getText();
+                String email = txtEmail.getText();
+                String diaChi = txtDiaChi.getText();
+                String luong = txtLuong.getText();
+                String ngayNhanViec = new SimpleDateFormat("yyyy-MM-dd").format(dateChooser.getDate());
+                String maChucVu = dsChucVu.get(cbChucVu.getSelectedIndex()).getMaChucVu();
+    
+                if (hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty() || luong.isEmpty()) {
+                    JOptionPane.showMessageDialog(dialog, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                else
-                    break;
-                }catch (NumberFormatException e){
-                    JOptionPane.showMessageDialog(null, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+    
+                NhanVienDTO nv = new NhanVienDTO(maNV, hoTen, gioiTinh, sdt, email, diaChi, Long.parseLong(luong), ngayNhanViec, "Hiện");
+                if (nvBUS.update(nv)) {
+                    JOptionPane.showMessageDialog(dialog, "Sửa nhân viên thành công!");
+                    dialog.dispose();
+                    loadTableData();
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Sửa thất bại! Kiểm tra dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
-        }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    
+        dialog.setVisible(true);
     }
 
     private void xoaNhanVien() {

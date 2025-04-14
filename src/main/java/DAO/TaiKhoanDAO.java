@@ -126,4 +126,20 @@ public class TaiKhoanDAO {
         }
         return false;
     }
+
+    public boolean isUsernameUpdateExists(String username, String maNhanVien) {
+        String sql = "SELECT * FROM taikhoan WHERE TenDangNhap = ? AND MaNhanVien != ? AND TrangThai = 'Hiện'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, maNhanVien);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next(); // Nếu có kết quả trả về thì username đã tồn tại
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    
 }

@@ -48,4 +48,26 @@ public class TaiKhoanBUS {
         }
         return true;
     }
+
+    public boolean checkTextUpdate(String tenDangNhap, String matKhau, String maChucVu, String maNhanVien) {
+        if (tenDangNhap.length() > 50) {
+            JOptionPane.showMessageDialog(null, "Tên đăng nhập không được quá 50 ký tự!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if (tkDAO.isUsernameUpdateExists(tenDangNhap, maNhanVien)) {
+            JOptionPane.showMessageDialog(null, "Tên đăng nhập đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if (matKhau.length() < 6) {
+            JOptionPane.showMessageDialog(null, "Mật khẩu phải từ 6 ký tự trở lên!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        else if (matKhau.length() < 6 || matKhau.length() > 50) {
+            JOptionPane.showMessageDialog(null, "Mật khẩu phải từ 6 đến 50 ký tự!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    
 }
