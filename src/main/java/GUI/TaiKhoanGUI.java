@@ -6,13 +6,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.function.BiConsumer;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -25,14 +22,10 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.toedter.calendar.JDateChooser;
-
 import BUS.ChucVuBUS;
 import BUS.NhanVienBUS;
 import BUS.TaiKhoanBUS;
-import BUS.TaiKhoanBUS;
 import DTO.ChucVuDTO;
-import DTO.TaiKhoanDTO;
 import DTO.TaiKhoanDTO;
 import fillter.Button;
 import fillter.Colors;
@@ -42,7 +35,7 @@ public class TaiKhoanGUI extends JPanel {
     private JTextField txtSearch;
     private JTable ContentTable;
     private JPanel PanelHeader, PanelContent, pSearch;
-    private JComboBox cbSearch;
+    private JComboBox cbSearch, cbChucVuFilter;
     private DefaultTableModel tableModel;
     private TaiKhoanBUS tkBUS;
 
@@ -55,23 +48,12 @@ public class TaiKhoanGUI extends JPanel {
         tkBUS = new TaiKhoanBUS();
 
         PanelHeader = new JPanel();
-        PanelHeader.setLayout(new BorderLayout());
+        PanelHeader.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10)); // căn trái, khoảng cách giữa các phần tử
         PanelHeader.setBackground(Colors.MAIN_BACKGROUND);
-        PanelHeader.setPreferredSize(new Dimension(this.getWidth(), 120)); // cao hơn để chứa 2 hàng
-
-        // Hàng trên: nút
-        JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        panelButtons.setBackground(Colors.MAIN_BACKGROUND);
+        PanelHeader.setPreferredSize(new Dimension(this.getWidth(), 75));
 
         EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
         EditBtn.addActionListener(e -> suaTaiKhoan());
-
-        panelButtons.add(EditBtn);
-
-        // Hàng dưới: ô tìm kiếm
-        pSearch = new JPanel();
-        pSearch.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        pSearch.setBackground(Colors.MAIN_BACKGROUND);
 
         // Tạo panel con để bao phủ ô tìm kiếm và comboBox
         JPanel panelSearchFields = new JPanel();
@@ -86,7 +68,7 @@ public class TaiKhoanGUI extends JPanel {
         ));
 
         cbSearch = new JComboBox<>(new String[]{"Tên đăng nhập", "Họ tên"});
-        cbSearch.setPreferredSize(new Dimension(80, 30));
+        cbSearch.setPreferredSize(new Dimension(120, 30));
         txtSearch = new JTextField(15);
         txtSearch.setPreferredSize(new Dimension(150, 30));
 
@@ -94,12 +76,32 @@ public class TaiKhoanGUI extends JPanel {
         panelSearchFields.add(cbSearch);
         panelSearchFields.add(txtSearch);
 
-        // Thêm panel con vào pSearch
-        pSearch.add(panelSearchFields);
+        // Tạo panel con để bao phủ  comboBox chức vụ
+        JPanel pChucVuFilter = new JPanel();
+        pChucVuFilter.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        pChucVuFilter.setBackground(Colors.MAIN_BACKGROUND);
+        pChucVuFilter.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY),
+            "Chức vụ",
+            TitledBorder.LEADING,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 14)
+        ));
+        ArrayList<ChucVuDTO> dsChucVu = ChucVuBUS.getAllChucVu();
+        String[] dsTenChucVu = new String[dsChucVu.size() + 1];
+        dsTenChucVu[0] = "Tất cả";
+        for (int i = 1; i < dsChucVu.size() + 1; i++)
+            dsTenChucVu[i] = dsChucVu.get(i-1).getTenChucVu();
+        cbChucVuFilter = new JComboBox<>(dsTenChucVu);
+        cbChucVuFilter.setPreferredSize(new Dimension(120, 30));
+
+        // Thêm vào panel con
+        pChucVuFilter.add(cbChucVuFilter);
 
         // Thêm cả 2 hàng vào PanelHeader
-        PanelHeader.add(panelButtons, BorderLayout.NORTH);
-        PanelHeader.add(pSearch, BorderLayout.SOUTH);
+        PanelHeader.add(EditBtn, BorderLayout.NORTH);
+        PanelHeader.add(panelSearchFields, BorderLayout.SOUTH);
+        PanelHeader.add(pChucVuFilter, BorderLayout.SOUTH);
         
         PanelContent = new JPanel(new BorderLayout());
         PanelContent.setBackground(Colors.MAIN_BACKGROUND);
@@ -127,12 +129,23 @@ public class TaiKhoanGUI extends JPanel {
         this.add(PanelHeader, BorderLayout.NORTH);
         this.add(PanelContent, BorderLayout.CENTER);
 
-        loadTableData();
+        loadTableData(TaiKhoanBUS.getAllTaiKhoan());
+        // Khi thay đổi cbSearch
+        cbSearch.addActionListener(e -> timKiemTaiKhoan());
+
+        // Khi thay đổi cbChucVuFilter
+        cbChucVuFilter.addActionListener(e -> timKiemTaiKhoan());
+
+        // Khi người dùng nhập liệu vào txtSearch
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { timKiemTaiKhoan(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { timKiemTaiKhoan(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { timKiemTaiKhoan(); }
+        });
     }
 
-    private void loadTableData() {
+    private void loadTableData(ArrayList<TaiKhoanDTO> danhSachTaiKhoan) {
         tableModel.setRowCount(0);
-        ArrayList<TaiKhoanDTO> danhSachTaiKhoan = TaiKhoanBUS.getAllTaiKhoan();
         for (TaiKhoanDTO tk : danhSachTaiKhoan) {
             tableModel.addRow(new Object[]{
                 tk.getMaNhanVien(),
@@ -165,7 +178,9 @@ public class TaiKhoanGUI extends JPanel {
         JTextField txtPassword = new JTextField(password);
     
         ArrayList<ChucVuDTO> dsChucVu = ChucVuBUS.getAllChucVu();
-        String[] dsTenChucVu = dsChucVu.stream().map(ChucVuDTO::getTenChucVu).toArray(String[]::new);
+        String[] dsTenChucVu = new String[dsChucVu.size()];
+        for (int i = 0; i < dsChucVu.size(); i++)
+            dsTenChucVu[i] = dsChucVu.get(i).getTenChucVu();
         JComboBox<String> cbChucVu = new JComboBox<>(dsTenChucVu);
     
         // Tìm vị trí của mã chức vụ hiện tại để set selected
@@ -202,6 +217,8 @@ public class TaiKhoanGUI extends JPanel {
         dialog.setSize(500, 300);
         dialog.setLocationRelativeTo(null);
         dialog.setLayout(new BorderLayout());
+        if(MainLayout.getMaNVDangDN().equals(maNV))
+            cbChucVu.setEnabled(false);
     
         dialog.add(inputPanel, BorderLayout.CENTER);
         dialog.add(buttonPanel, BorderLayout.SOUTH);
@@ -227,7 +244,7 @@ public class TaiKhoanGUI extends JPanel {
             if (tkBUS.update(tk)) {
                 JOptionPane.showMessageDialog(dialog, "Cập nhật tài khoản thành công!");
                 dialog.dispose();
-                loadTableData();
+                loadTableData(TaiKhoanBUS.getAllTaiKhoan());
             } else {
                 JOptionPane.showMessageDialog(dialog, "Cập nhật thất bại! Kiểm tra dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
@@ -236,6 +253,24 @@ public class TaiKhoanGUI extends JPanel {
         dialog.setVisible(true);
     }
 
+    private void timKiemTaiKhoan() {
+        try{
+            String kieuTim = cbSearch.getSelectedItem().toString();
+            String tuKhoa = txtSearch.getText().trim();
+            String chucVu = cbChucVuFilter.getSelectedItem().toString();
+
+            // Gọi DAO
+            ArrayList<TaiKhoanDTO> dsKetQua = tkBUS.search(
+                kieuTim, tuKhoa, chucVu
+            );
+        
+            // Load kết quả vào bảng
+            tableModel.setRowCount(0);
+            loadTableData(dsKetQua);
+        } catch(NumberFormatException ne){
+            JOptionPane.showMessageDialog(null, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
 }
 

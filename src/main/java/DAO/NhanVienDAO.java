@@ -177,4 +177,102 @@ public class NhanVienDAO {
         }
         return false; // Không tìm thấy email
     }
+
+    public ArrayList<NhanVienDTO> search(String cbTimKiem, String txTimKiem, String gioiTinh,
+                                     Double luongMin, Double luongMax,
+                                     String ngayBatDau, String ngayKetThuc) {
+
+        ArrayList<NhanVienDTO> result = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM nhanvien WHERE TrangThai = 'Hiện'");
+        ArrayList<Object> parameters = new ArrayList<>();
+
+        // Tìm kiếm theo combobox
+        if (cbTimKiem != null && !txTimKiem.isEmpty()) {
+            txTimKiem = "%" + txTimKiem + "%";
+            switch (cbTimKiem) {
+                case "Mã NV":
+                    query.append(" AND MaNhanVien LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+                case "Họ tên":
+                    query.append(" AND HoTen LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+                case "SĐT":
+                    query.append(" AND SoDienThoai LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+                case "Email":
+                    query.append(" AND Email LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+                case "Địa chỉ":
+                    query.append(" AND DiaChi LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+            }
+        }
+
+        // Giới tính
+        if (!gioiTinh.equals("Tất cả")) {
+            query.append(" AND GioiTinh = ?");
+            parameters.add(gioiTinh);
+        }
+
+        // Lương
+        if (luongMin != null) {
+            query.append(" AND Luong >= ?");
+            parameters.add(luongMin);
+        }
+        if (luongMax != null) {
+            query.append(" AND Luong <= ?");
+            parameters.add(luongMax);
+        }
+
+        // Ngày nhận việc
+        if (ngayBatDau != null && !ngayBatDau.isEmpty()) {
+            query.append(" AND NgayNhanViec >= ?");
+            parameters.add(ngayBatDau);
+        }
+        if (ngayKetThuc != null && !ngayKetThuc.isEmpty()) {
+            query.append(" AND NgayNhanViec <= ?");
+            parameters.add(ngayKetThuc);
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+
+            // Gán tham số vào dấu ?
+            for (int i = 0; i < parameters.size(); i++) {
+                Object param = parameters.get(i);
+                if (param instanceof String)
+                    stmt.setString(i + 1, (String) param);
+                else if (param instanceof Double)
+                    stmt.setDouble(i + 1, (Double) param);
+            }
+
+            // Thực thi và đọc kết quả
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new NhanVienDTO(
+                            rs.getString("MaNhanVien"),
+                            rs.getString("HoTen"),
+                            rs.getString("GioiTinh"),
+                            rs.getString("SoDienThoai"),
+                            rs.getString("Email"),
+                            rs.getString("DiaChi"),
+                            rs.getLong("Luong"),
+                            rs.getString("NgayNhanViec"),
+                            rs.getString("TrangThai")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Query: " + query.toString());
+        System.out.println("Parameters: " + parameters.toString());
+        return result;
+    }
 }

@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.function.BiConsumer;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -38,13 +37,15 @@ import fillter.Colors;
 
 public class NhanVienGUI extends JPanel {
     private Button AddBtn, DeleteBtn, EditBtn;
-    private JTextField txtSearch;
+    private JTextField txtSearch, txtLuongMin, txtLuongMax;
     private JTable ContentTable;
     private JPanel PanelHeader, PanelContent, pSearch;
     private JComboBox cbSearch;
     private DefaultTableModel tableModel;
     private NhanVienBUS nvBUS;
     private TaiKhoanBUS tkBUS;
+    private JComboBox<String> cbGioiTinhFilter;
+    private JDateChooser dateFrom, dateTo;
 
     public NhanVienGUI() {
         this.setBackground(Colors.MAIN_BACKGROUND);
@@ -102,8 +103,68 @@ public class NhanVienGUI extends JPanel {
         panelSearchFields.add(cbSearch);
         panelSearchFields.add(txtSearch);
 
+        // Panel lọc giới tính
+        JPanel genderFilterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        genderFilterPanel.setBackground(Colors.MAIN_BACKGROUND);
+        genderFilterPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY),
+            "Giới tính",
+            TitledBorder.LEADING,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 14)
+        ));
+        cbGioiTinhFilter = new JComboBox<>(new String[]{"Tất cả", "Nam", "Nữ"});
+        cbGioiTinhFilter.setPreferredSize(new Dimension(80, 30));
+        genderFilterPanel.add(cbGioiTinhFilter);
+
+        // Panel lọc lương
+        JPanel salaryFilterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        salaryFilterPanel.setBackground(Colors.MAIN_BACKGROUND);
+        salaryFilterPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY),
+            "Lương",
+            TitledBorder.LEADING,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 14)
+        ));
+        txtLuongMin = new JTextField();
+        txtLuongMax = new JTextField();
+        txtLuongMin.setPreferredSize(new Dimension(100, 30));
+        txtLuongMax.setPreferredSize(new Dimension(100, 30));
+        salaryFilterPanel.add(new JLabel("Từ:"));
+        salaryFilterPanel.add(txtLuongMin);
+        salaryFilterPanel.add(new JLabel("Đến:"));
+        salaryFilterPanel.add(txtLuongMax);
+
+        // Panel lọc ngày nhận việc
+        JPanel dateFilterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        dateFilterPanel.setBackground(Colors.MAIN_BACKGROUND);
+        dateFilterPanel.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(Color.GRAY),
+            "Ngày Nhận Việc",
+            TitledBorder.LEADING,
+            TitledBorder.TOP,
+            new Font("Arial", Font.BOLD, 14)
+        ));
+        dateFrom = new JDateChooser();
+        dateTo = new JDateChooser();
+        dateFrom.setPreferredSize(new Dimension(110, 30));
+        dateTo.setPreferredSize(new Dimension(110, 30));
+        dateFrom.setDateFormatString("yyyy-MM-dd");
+        dateTo.setDateFormatString("yyyy-MM-dd");
+        ((JTextField) dateFrom.getDateEditor().getUiComponent()).setEditable(false);
+        ((JTextField) dateTo.getDateEditor().getUiComponent()).setEditable(false);
+
+        dateFilterPanel.add(new JLabel("Từ:"));
+        dateFilterPanel.add(dateFrom);
+        dateFilterPanel.add(new JLabel("Đến:"));
+        dateFilterPanel.add(dateTo);
+
         // Thêm panel con vào pSearch
         pSearch.add(panelSearchFields);
+        pSearch.add(genderFilterPanel);
+        pSearch.add(salaryFilterPanel);
+        pSearch.add(dateFilterPanel);
 
         // Thêm cả 2 hàng vào PanelHeader
         PanelHeader.add(panelButtons, BorderLayout.NORTH);
@@ -126,12 +187,51 @@ public class NhanVienGUI extends JPanel {
         this.add(PanelHeader, BorderLayout.NORTH);
         this.add(PanelContent, BorderLayout.CENTER);
 
-        loadTableData();
+        loadTableData(NhanVienBUS.getAllNhanVien());
+
+        // Khi thay đổi cbSearch
+        cbSearch.addActionListener(e -> timKiemNhanVien());
+
+        // Khi thay đổi cbGioiTinhFilter
+        cbGioiTinhFilter.addActionListener(e -> timKiemNhanVien());
+
+        // Khi người dùng nhập liệu vào txtSearch
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+        });
+
+        // Khi nhập liệu vào txtLuongMin
+        txtLuongMin.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+        });
+
+        // Khi nhập liệu vào txtLuongMax
+        txtLuongMax.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { timKiemNhanVien(); }
+        });
+
+        // Khi chọn ngày trong dateFrom
+        dateFrom.getDateEditor().addPropertyChangeListener(evt -> {
+            if ("date".equals(evt.getPropertyName())) {
+                timKiemNhanVien();
+            }
+        });
+
+        // Khi chọn ngày trong dateTo
+        dateTo.getDateEditor().addPropertyChangeListener(evt -> {
+            if ("date".equals(evt.getPropertyName())) {
+                timKiemNhanVien();
+            }
+        });
     }
 
-    private void loadTableData() {
-        tableModel.setRowCount(0);
-        ArrayList<NhanVienDTO> danhSachNhanVien = NhanVienBUS.getAllNhanVien();
+    private void loadTableData(ArrayList<NhanVienDTO> danhSachNhanVien) {
     
         for (NhanVienDTO nv : danhSachNhanVien) {
             tableModel.addRow(new Object[]{
@@ -169,7 +269,9 @@ public class NhanVienGUI extends JPanel {
     
         // Tạo danh sách chức vụ
         ArrayList<ChucVuDTO> dsChucVu = ChucVuBUS.getAllChucVu();
-        String[] dsTenChucVu = dsChucVu.stream().map(ChucVuDTO::getTenChucVu).toArray(String[]::new);
+        String[] dsTenChucVu = new String[dsChucVu.size()];
+        for (int i = 0; i < dsChucVu.size(); i++)
+            dsTenChucVu[i] = dsChucVu.get(i).getTenChucVu();
         JComboBox<String> cbChucVu = new JComboBox<>(dsTenChucVu);
     
         // Tạo panel chứa các dòng input
@@ -248,7 +350,7 @@ public class NhanVienGUI extends JPanel {
                 if (nvBUS.add(nv) && tkBUS.add(tk)) {
                     JOptionPane.showMessageDialog(dialog, "Thêm nhân viên và tài khoản thành công!");
                     dialog.dispose();
-                    loadTableData();
+                    loadTableData(NhanVienBUS.getAllNhanVien());
                 } else {
                     JOptionPane.showMessageDialog(dialog, "Thêm thất bại! Kiểm tra dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
@@ -370,7 +472,7 @@ public class NhanVienGUI extends JPanel {
                 if (nvBUS.update(nv)) {
                     JOptionPane.showMessageDialog(dialog, "Sửa nhân viên thành công!");
                     dialog.dispose();
-                    loadTableData();
+                    loadTableData(NhanVienBUS.getAllNhanVien());
                 } else {
                     JOptionPane.showMessageDialog(dialog, "Sửa thất bại! Kiểm tra dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
@@ -391,12 +493,54 @@ public class NhanVienGUI extends JPanel {
         String maNV = ContentTable.getValueAt(selectedRow, 0).toString();
         int result = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa nhân viên này không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
+            if (MainLayout.getMaNVDangDN().equals(maNV)) {
+                JOptionPane.showMessageDialog(null, "Không thể xóa chính mình!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+             // Kiểm tra xem nhân viên có tài khoản không
             if (nvBUS.delete(maNV)) {
                 JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công!");
-                loadTableData();
+                loadTableData(NhanVienBUS.getAllNhanVien());
             } else {
                 JOptionPane.showMessageDialog(null, "Xóa nhân viên thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+    
+    private void timKiemNhanVien() {
+        try{
+            String kieuTim = cbSearch.getSelectedItem().toString();
+            String tuKhoa = txtSearch.getText().trim();
+            String gioiTinh = cbGioiTinhFilter.getSelectedItem().toString();
+
+            String luongMinText = txtLuongMin.getText().trim();
+            String luongMaxText = txtLuongMax.getText().trim();
+            //Kiểm tra nếu không rỗng thì chuyển kiểu
+            Double luongMin = luongMinText.isEmpty() ? null : Double.parseDouble(luongMinText);
+            Double luongMax = luongMaxText.isEmpty() ? null : Double.parseDouble(luongMaxText);
+
+            // Lấy ngày dưới dạng String
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String ngayTu = "";
+            String ngayDen = "";
+        
+            if (dateFrom.getDate() != null) {
+                ngayTu = sdf.format(dateFrom.getDate());
+            }
+            if (dateTo.getDate() != null) {
+                ngayDen = sdf.format(dateTo.getDate());
+            }
+        
+            // Gọi DAO
+            ArrayList<NhanVienDTO> dsKetQua = nvBUS.search(
+                kieuTim, tuKhoa, gioiTinh, luongMin, luongMax, ngayTu, ngayDen
+            );
+        
+            // Load kết quả vào bảng
+            tableModel.setRowCount(0);
+            loadTableData(dsKetQua);
+        } catch(NumberFormatException ne){
+            JOptionPane.showMessageDialog(null, "Lương phải là số!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
