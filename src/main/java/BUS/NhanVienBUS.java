@@ -75,4 +75,10 @@ public class NhanVienBUS {
         }
         return true;
     }
+
+    public ArrayList<NhanVienDTO> search(String cbTimKiem, String txTimKiem, String gioiTinh,
+                                              Double luongMin, Double luongMax,
+                                              String ngayBatDau, String ngayKetThuc) {
+        return nvDAO.search(cbTimKiem , txTimKiem, gioiTinh, luongMin, luongMax, ngayBatDau, ngayKetThuc);
+    }
 }

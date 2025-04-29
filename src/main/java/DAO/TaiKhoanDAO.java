@@ -141,5 +141,66 @@ public class TaiKhoanDAO {
         return false;
     }
 
-    
+    public ArrayList<TaiKhoanDTO> search(String cbTimKiem, String txTimKiem, String chucVu) {
+
+        ArrayList<TaiKhoanDTO> result = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM taikhoan JOIN nhanvien ON taikhoan.MaNhanVien = nhanvien.MaNhanVien WHERE taikhoan.TrangThai = 'Hiện'");
+        ArrayList<Object> parameters = new ArrayList<>();
+
+        // Tìm kiếm theo combobox
+        if (cbTimKiem != null && !txTimKiem.isEmpty()) {
+            txTimKiem = "%" + txTimKiem + "%";
+            switch (cbTimKiem) {
+                case "Tên đăng nhập":
+                    query.append(" AND TenDangNhap LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+                case "Họ tên":
+                    //Kiểm tra cứu theo tên nhân viên từ bảng nhân viên
+                    query.append(" AND HoTen LIKE ?");
+                    parameters.add(txTimKiem);
+                    break;
+            }
+        }
+
+        // Giới tính
+        if (!chucVu.equals("Tất cả")) {
+            query.append(" AND MaChucVu = ?");
+            String maChucVu = ChucVuDAO.getMaChucVuByTen(chucVu);
+            parameters.add(maChucVu);
+        }
+
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+
+            // Gán tham số vào dấu ?
+            for (int i = 0; i < parameters.size(); i++) {
+                Object param = parameters.get(i);
+                if (param instanceof String)
+                    stmt.setString(i + 1, (String) param);
+                else if (param instanceof Double)
+                    stmt.setDouble(i + 1, (Double) param);
+            }
+
+            // Thực thi và đọc kết quả
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new TaiKhoanDTO(
+                            rs.getString("TenDangNhap"),
+                            rs.getString("MatKhau"),
+                            rs.getString("MaNhanVien"),
+                            rs.getString("MaChucVu"),
+                            rs.getString("TrangThai")
+                    ));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Query: " + query.toString());
+        System.out.println("Parameters: " + parameters.toString());
+        return result;
+    }
+
 }

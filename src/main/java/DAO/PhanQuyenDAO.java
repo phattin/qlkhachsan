@@ -66,4 +66,17 @@ public class PhanQuyenDAO {
         }
         return false; 
     }
+
+    public boolean deleteByMaChucVu(String maChucVu) {
+        String sql = "DELETE FROM phanquyen WHERE MaChucVu = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, maChucVu);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0; // Trả về true nếu xóa thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
 }

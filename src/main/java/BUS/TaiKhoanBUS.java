@@ -69,5 +69,7 @@ public class TaiKhoanBUS {
         return true;
     }
 
-    
+    public ArrayList<TaiKhoanDTO> search(String cbTimKiem, String txTimKiem, String chucVu) {
+        return tkDAO.search(cbTimKiem, txTimKiem, chucVu);
+    }
 }

@@ -15,5 +15,12 @@ public class ChucNangBUS {
         return DAO.ChucNangDAO.getChucNangByMa(maChucNang);
     }
 
+    public String getMaByTenChucNang(String tenCN){
+        return cnDAO.getMaByTenChucNang(tenCN);
+    }
+
+    public ArrayList<ChucNangDTO> getChucNangByMaChucVu(String maChucVu) {
+        return cnDAO.getChucNangByMaChucVu(maChucVu);
+    }
 
 }

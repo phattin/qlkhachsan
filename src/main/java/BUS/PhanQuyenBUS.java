@@ -19,4 +19,8 @@ public class PhanQuyenBUS {
         return pqDAO.add(pqDTO);
     }
 
+    public boolean deleteByMaChucVu(String maChucVu) {
+        return pqDAO.deleteByMaChucVu(maChucVu);
+    }
+
 }

@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import BUS.ChucNangBUS;
@@ -22,7 +23,7 @@ import fillter.Colors;
 public final class MainLayout extends JFrame {
     private JPanel Title, Menu, Content; 
     private Button[] buttons;
-    private String maNhanVien;
+    private static String maNhanVien;
     
     public MainLayout(String maNV) {
         this.maNhanVien = maNV;
@@ -170,7 +171,7 @@ public final class MainLayout extends JFrame {
                     case "Khách hàng" -> new KhachHangGUI();
                     case "Nhân viên" -> new NhanVienGUI();
                     case "Tài khoản" -> new TaiKhoanGUI();
-                    // case "Phân quyền" -> new PhanQuyenGUI();
+                    case "Phân quyền" -> new PhanQuyenGUI();
                     // case "Hóa đơn" -> new HoaDonGUI();
                     // case "Dịch vụ" -> new DichVuGUI();
                     // case "Thống kê" -> new ThongKeGUI();
@@ -181,6 +182,24 @@ public final class MainLayout extends JFrame {
                 final JPanel selectedPanel = targetPanel;
                 buttons[i].addActionListener(e -> switchPanel(selectedPanel, buttons[index]));
             }
+        // =============== Thêm nút Đăng Xuất cuối cùng Menu ===============
+        JPanel panelDangXuat = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
+        panelDangXuat.setBackground(Colors.WHITE_FONT);
+        panelDangXuat.setPreferredSize(new Dimension(200, 80)); // đủ chỗ cho nút
+
+        Button btnDangXuat = new Button("menuButton", "Đăng xuất", 180, 40, "/Icon/logout_icon.png");
+        btnDangXuat.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                this.maNhanVien = null; // Đặt lại mã nhân viên
+                this.dispose(); // Đóng cửa sổ hiện tại
+                Login App = new Login();
+                App.setVisible(true);
+            }
+        });
+
+        panelDangXuat.add(btnDangXuat);
+        Menu.add(panelDangXuat);  // thêm vào cuối Menu
 
         Title.add(LBTitle);
         Title.add(ButtonMinimize);
@@ -226,4 +245,7 @@ public final class MainLayout extends JFrame {
         Button.selectedButton = selectedBtn;
     }
 
+    public static String getMaNVDangDN() {
+        return maNhanVien;
+    }
 }
