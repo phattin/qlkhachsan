@@ -13,10 +13,10 @@ public class HoaDonDTO {
 
     public HoaDonDTO() {}
 
-    public HoaDonDTO(String MaHoaDon, String MaNhanVien, Date NgayTAo, double TongTien, double TienTra, double TienThua, String TrangThai) {
+    public HoaDonDTO(String MaHoaDon, String MaNhanVien, Date NgayTao, double TongTien, double TienTra, double TienThua, String TrangThai) {
         this.MaHoaDon = MaHoaDon;
         this.MaNhanVien = MaNhanVien;
-        this.NgayTao = NgayTAo;
+        this.NgayTao = NgayTao;
         this.TongTien = TongTien;
         this.TienTra = TienTra;
         this.TienThua = TienThua;
