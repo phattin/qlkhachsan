@@ -135,7 +135,7 @@ CREATE TABLE `hoadon` (
   `MaDatPhong` varchar(10) DEFAULT NULL,
   `MaKhachHang` varchar(10) DEFAULT NULL,
   `MaNhanVien` varchar(10) NOT NULL,
-  `NgayLap` date NOT NULL,
+  `NgayTao` date NOT NULL,
   `TongTien` int(10) NOT NULL,
   `TienTra` int(10) NOT NULL,
   `TienThua` int(10) NOT NULL,
