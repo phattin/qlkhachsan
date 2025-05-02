@@ -24,7 +24,6 @@
             <artifactId>jcalendar</artifactId>
             <version>1.4</version>
         </dependency>
-    </dependencies>
 
         <!-- JFreeChart -->
         <dependency>
@@ -32,7 +31,7 @@
             <artifactId>jfreechart</artifactId>
             <version>1.5.3</version>
         </dependency>
-
+    </dependencies>
     <name>QLKhachSan</name>
 </project>
 

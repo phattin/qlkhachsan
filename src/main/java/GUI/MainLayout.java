@@ -174,7 +174,7 @@ public final class MainLayout extends JFrame {
                     case "Phân quyền" -> new PhanQuyenGUI();
                     case "Hóa đơn" -> new HoaDonGUI();
                     // case "Dịch vụ" -> new DichVuGUI();
-                    // case "Thống kê" -> new ThongKeGUI();
+                    case "Thống kê" -> new ThongKeGUI();
                     default -> new JPanel(); // mặc định nếu không khớp
                 };
             
@@ -221,7 +221,7 @@ public final class MainLayout extends JFrame {
             // case "Phân quyền" -> new PhanQuyenGUI();
             case "Hóa đơn" -> new HoaDonGUI();
             // case "Dịch vụ" -> new DichVuGUI();
-            // case "Thống kê" -> new ThongKeGUI();
+            case "Thống kê" -> new ThongKeGUI();
             default -> new JPanel();
         };
         switchPanel(firstPanel, buttons[0]);
