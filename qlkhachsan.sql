@@ -146,7 +146,7 @@ CREATE TABLE `hoadon` (
 -- Đang đổ dữ liệu cho bảng `hoadon`
 --
 
-INSERT INTO `hoadon` (`MaHoaDon`, `MaDatPhong`, `MaKhachHang`, `MaNhanVien`, `NgayLap`, `TongTien`, `TienTra`, `TienThua`, `TrangThai`) VALUES
+INSERT INTO `hoadon` (`MaHoaDon`, `MaDatPhong`, `MaKhachHang`, `MaNhanVien`, `NgayTao`, `TongTien`, `TienTra`, `TienThua`, `TrangThai`) VALUES
 ('HD001', 'DP001', 'KH001', 'NV001', '2025-03-25', 600000, 600000, 0, 'Đã thanh toán');
 
 -- --------------------------------------------------------
