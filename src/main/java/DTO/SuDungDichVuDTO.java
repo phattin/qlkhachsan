@@ -1,32 +1,31 @@
-
 package DTO;
 
 public class SuDungDichVuDTO {
-    private int maSDDV;
-    private int maDP;
-    private int maDv;
+    private String maSDDV; // Chuyển từ int sang String
+    private String maDP;   // Chuyển từ int sang String
+    private String maDv;   // Chuyển từ int sang String
     private int soLuong;
     
     public SuDungDichVuDTO(){
         
     }
 
-    public SuDungDichVuDTO(int maSDDV, int maDP, int maDv, int soLuong) {
+    public SuDungDichVuDTO(String maSDDV, String maDP, String maDv, int soLuong) {
         this.maSDDV = maSDDV;
         this.maDP = maDP;
         this.maDv = maDv;
         this.soLuong = soLuong;
     }
 
-    public int getMaSDDV() {
+    public String getMaSDDV() {
         return maSDDV;
     }
 
-    public int getMaDP() {
+    public String getMaDP() {
         return maDP;
     }
 
-    public int getMaDv() {
+    public String getMaDv() {
         return maDv;
     }
 
@@ -34,21 +33,19 @@ public class SuDungDichVuDTO {
         return soLuong;
     }
 
-    public void setMaSDDV(int maSDDV) {
+    public void setMaSDDV(String maSDDV) {
         this.maSDDV = maSDDV;
     }
 
-    public void setMaDP(int maDP) {
+    public void setMaDP(String maDP) {
         this.maDP = maDP;
     }
 
-    public void setMaDv(int maDv) {
+    public void setMaDv(String maDv) {
         this.maDv = maDv;
     }
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
     }
-    
-    
 }

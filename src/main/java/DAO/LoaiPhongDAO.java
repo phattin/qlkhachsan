@@ -10,7 +10,7 @@ public class LoaiPhongDAO {
     // Lấy tất cả loại phòng
     public ArrayList<LoaiPhongDTO> getALL() {
         ArrayList<LoaiPhongDTO> dsloaiphong = new ArrayList<>();
-        String sql = "SELECT * FROM phong";
+        String sql = "SELECT * FROM loaiphong";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -33,7 +33,7 @@ public class LoaiPhongDAO {
 
     // Thêm loại phòng mới
     public boolean add(LoaiPhongDTO lp) {
-        String sql = "INSERT INTO phong (MaLoaiPhong, TenLoaiPhong, SoGiuong, GiaPhong) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO loaiphong (MaLoaiPhong, TenLoaiPhong, SoGiuong, GiaPhong) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {

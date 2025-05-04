@@ -11,8 +11,10 @@ import DTO.PhongDTO;
 import GUI.Dialog.AddCustomerGUI;
 import GUI.Dialog.AddRoomGUI;
 import BUS.DatPhongBUS;
+import BUS.KhachHangBUS;
 import BUS.LoaiPhongBUS;
 import DTO.DatPhongDTO;
+import DTO.KhachHangDTO;
 import DTO.LoaiPhongDTO;
 
 import java.util.ArrayList;
@@ -55,7 +57,24 @@ public class PhongGUI extends JPanel {
         CBFilter.setPreferredSize(new Dimension(120, 35));
 
         txtSearch = new JTextField(15);
-        txtSearch.setPreferredSize(new Dimension(150, 35));
+        txtSearch.setPreferredSize(new Dimension(150, 30));
+        // Thêm chức năng tìm kiếm
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+        });
 
         PanelHeader.add(AddBtn);
         PanelHeader.add(DeleteBtn);
@@ -84,6 +103,8 @@ public class PhongGUI extends JPanel {
         this.add(PanelContent, BorderLayout.CENTER);
 
         loadTableData();
+
+        CBFilter.addActionListener(e -> locDuLieu());
     }
 
     private void loadTableData() {
@@ -126,9 +147,15 @@ public class PhongGUI extends JPanel {
         PhongDTO phong = new PhongDTO(maPhong, maLP, trangThai);
     
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        new AddRoomGUI(parentFrame, phongBUS, "Chỉnh sửa phòng", "save", phong);
+
+        AddRoomGUI addRoomGUI = new AddRoomGUI(parentFrame, phongBUS, "Chỉnh sửa phòng", "save", phong);
+    
+        JComboBox<String> cbMaLP = addRoomGUI.getLoaiPhongComboBox();
+        cbMaLP.setSelectedItem(maLP);
+    
         loadTableData();
     }
+    
 
     private void deleteRoom() {
         int selectedRow = ContentTable.getSelectedRow();
@@ -147,6 +174,64 @@ public class PhongGUI extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(this, "Xóa phòng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+
+    private void timKiem() {
+        String tuKhoa = txtSearch.getText().toLowerCase().trim();
+        locVaTimKiem(tuKhoa, CBFilter.getSelectedItem().toString());
+    }
+
+    private void locDuLieu() {
+        String tuKhoa = txtSearch.getText().toLowerCase().trim();
+        locVaTimKiem(tuKhoa, CBFilter.getSelectedItem().toString());
+    }
+
+    private void locVaTimKiem(String tuKhoa, String tuyChinh) {
+        tableModel.setRowCount(0);
+        ArrayList<PhongDTO> danhSachPhong = phongBUS.getAllPhong();
+        
+        for (PhongDTO phong : danhSachPhong) {
+            LoaiPhongDTO loaiPhong = phongBUS.getLoaiPhongByMaPhong(phong.getMaPhong());
+            
+            // Áp dụng bộ lọc
+            if (!tuyChinh.equals("Tất cả")) {
+                if (tuyChinh.equals("Phòng trống") && !phong.getTrangThai().equals("Trống")) {
+                    continue;
+                } else if (tuyChinh.equals("Phòng đã đặt") && !phong.getTrangThai().equals("Đã đặt")) {
+                    continue;
+                }
+            }
+            
+            // Bỏ qua nếu không khớp với từ khóa tìm kiếm (tìm kiếm trên tất cả các cột)
+            if (!tuKhoa.isEmpty()) {
+                boolean timThay = false;
+                
+                // Kiểm tra tất cả các cột
+                if (phong.getMaPhong().toLowerCase().contains(tuKhoa) ||
+                    phong.getMaLoaiPhong().toLowerCase().contains(tuKhoa) ||
+                    loaiPhong.getTenLoaiPhong().toLowerCase().contains(tuKhoa) ||
+                    String.valueOf(loaiPhong.getSoGiuong()).toLowerCase().contains(tuKhoa) ||
+                    String.valueOf(loaiPhong.getGiaPhong()).toLowerCase().contains(tuKhoa) ||
+                    phong.getTrangThai().toLowerCase().contains(tuKhoa)) {
+                    timThay = true;
+                }
+                
+                if (!timThay) {
+                    continue;
+                }
+            }
+            
+            // Thêm dòng nếu đạt cả hai điều kiện lọc và tìm kiếm
+            tableModel.addRow(new Object[]{
+                phong.getMaPhong(),
+                phong.getMaLoaiPhong(),
+                loaiPhong.getTenLoaiPhong(),
+                loaiPhong.getSoGiuong(),
+                loaiPhong.getGiaPhong(),
+                phong.getTrangThai(),
+                "Xem Thêm"
+            });
         }
     }
     
@@ -194,17 +279,61 @@ class ButtonEditor extends DefaultCellEditor {
             JOptionPane.showMessageDialog(null, "Phòng này chưa có thông tin đặt phòng!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-
-        StringBuilder info = new StringBuilder();
+    
+        JDialog detailsDialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(button), "Chi tiết đặt phòng", true);
+        detailsDialog.setSize(500, 300);
+        detailsDialog.setLocationRelativeTo(null);
+    
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mainPanel.setBackground(Colors.WHITE_FONT);
+    
+        KhachHangBUS khachHangBUS = new KhachHangBUS();
+    
         for (DatPhongDTO dp : danhSach) {
-            info.append("Mã Đặt Phòng: ").append(dp.getMaDatPhong()).append("\n");
-            info.append("Mã Phòng: ").append(dp.getMaPhong()).append("\n");
-            info.append("Mã Khách Hàng: ").append(dp.getMaKH()).append("\n");
-            info.append("Ngày Nhận: ").append(dp.getNgayNhanPhong()).append("\n");
-            info.append("Ngày Trả: ").append(dp.getNgayTraPhong()).append("\n");
-            info.append("------------------------------------\n");
+            KhachHangDTO khachHang = khachHangBUS.getById(dp.getMaKH());
+            String tenKhachHang = (khachHang != null) ? khachHang.getHoTen() : "Không tìm thấy";
+    
+            JPanel bookingPanel = new JPanel();
+            bookingPanel.setLayout(new BoxLayout(bookingPanel, BoxLayout.Y_AXIS));
+            bookingPanel.setBackground(Colors.WHITE_FONT);
+            bookingPanel.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(Color.LIGHT_GRAY),
+                    BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+    
+            bookingPanel.add(createInfoRow("Mã Phòng:", dp.getMaPhong()));
+            bookingPanel.add(createInfoRow("Khách Hàng:", tenKhachHang));
+            bookingPanel.add(createInfoRow("Ngày Nhận:", dp.getNgayNhanPhong().toString()));
+            bookingPanel.add(createInfoRow("Ngày Trả:", dp.getNgayTraPhong().toString()));
+    
+            mainPanel.add(bookingPanel);
+            mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         }
-
-        JOptionPane.showMessageDialog(null, info.toString(), "Thông Tin Đặt Phòng", JOptionPane.INFORMATION_MESSAGE);
+    
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+    
+        detailsDialog.add(scrollPane, BorderLayout.CENTER);
+        detailsDialog.setVisible(true);
     }
+    
+    // Tạo dòng thông tin có nhãn và giá trị thẳng hàng
+    private JPanel createInfoRow(String label, String value) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.setBackground(Colors.WHITE_FONT);
+    
+        JLabel lbl = new JLabel(label);
+        lbl.setPreferredSize(new Dimension(100, 20)); // căn lề nhãn đều nhau
+        lbl.setFont(lbl.getFont().deriveFont(Font.BOLD));
+    
+        JLabel val = new JLabel(value);
+    
+        row.add(lbl);
+        row.add(val);
+        return row;
+    }
+    
+    
 }

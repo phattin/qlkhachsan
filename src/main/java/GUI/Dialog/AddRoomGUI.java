@@ -1,9 +1,6 @@
 package GUI.Dialog;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import java.awt.*;
 
 import BUS.LoaiPhongBUS;
@@ -14,7 +11,8 @@ import fillter.Button;
 import fillter.Colors;
 
 public class AddRoomGUI extends JDialog {
-    private JTextField txtMaPhong, txtMaLP, txtTenLP, txtSoGiuong, txtGiaTien, txtTrangThai;
+    private JTextField txtMaPhong, txtTenLP, txtSoGiuong, txtGiaTien, txtTrangThai;
+    private JComboBox<String> cbMaLP;
     private Button  btnAdd, btnSave, btnCancel;
     private PhongBUS phongBus;
     private LoaiPhongBUS loaiPhongBus;
@@ -29,8 +27,6 @@ public class AddRoomGUI extends JDialog {
         
         if(phong != null){
             txtMaPhong.setText(phong.getMaPhong());
-            txtMaLP.setText(phong.getMaLoaiPhong());
-    
             LoaiPhongDTO loaiPhong = loaiPhongBus.getById(phong.getMaLoaiPhong());
             if (loaiPhong != null) {
                 txtTenLP.setText(loaiPhong.getTenLoaiPhong());
@@ -59,100 +55,107 @@ public class AddRoomGUI extends JDialog {
         this.loaiPhongBus = new LoaiPhongBUS();
         this.setSize(550, 350);
         this.setLayout(new BorderLayout());
-
-        //panel input
+    
+        // Panel input
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
         inputPanel.setBackground((Colors.MAIN_BACKGROUND));
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
+    
         inputPanel.add(new JLabel("Mã Phòng: "));
-        inputPanel.add(txtMaPhong = new JTextField());
+        inputPanel.add(txtMaPhong = new JTextField(phongBus.increaseMaPhong()));
+        txtMaPhong.setEditable(false);
+        
         inputPanel.add(new JLabel("Mã Loại Phòng: "));
-        inputPanel.add(txtMaLP = new JTextField());
+        cbMaLP = new JComboBox<>();
+        inputPanel.add(cbMaLP);
+        
         inputPanel.add(new JLabel("Tên Loại Phòng: "));
         inputPanel.add(txtTenLP = new JTextField());
+        txtTenLP.setEditable(false);
+        
         inputPanel.add(new JLabel("Số Giường: "));
         inputPanel.add(txtSoGiuong = new JTextField());
+        txtSoGiuong.setEditable(false);
+        
         inputPanel.add(new JLabel("Giá Tiền/giờ: "));
         inputPanel.add(txtGiaTien = new JTextField());
+        txtGiaTien.setEditable(false);
+        
         inputPanel.add(new JLabel("Trạng Thái: "));
         inputPanel.add(txtTrangThai = new JTextField());
-
-        
-
+    
         // Panel Button
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         btnPanel.setBackground(Colors.MAIN_BACKGROUND);
-
+    
         btnAdd = new Button("add", "THÊM", 90, 35);
         btnSave = new Button("confirm", "LƯU", 90, 35);
         btnCancel = new Button("cancel", "HỦY", 90, 35);
-
+    
         switch (type){
             case "add" -> btnPanel.add(btnAdd);
             case "save" -> btnPanel.add(btnSave);
         }
         btnPanel.add(btnCancel);
-
+    
         this.add(inputPanel, BorderLayout.CENTER);
         this.add(btnPanel, BorderLayout.SOUTH);
-
-        //Action Listeners
+    
+        // Action Listeners
         btnCancel.addActionListener(e -> dispose());
         btnAdd.addActionListener(e -> addRoom());
         btnSave.addActionListener(e -> saveRoom());
-
+    
         if (phong != null) { 
             txtTenLP.setEditable(false);
             txtSoGiuong.setEditable(false);
             txtGiaTien.setEditable(false);
-        } 
+        }
     
-        txtMaLP.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-        public void insertUpdate(DocumentEvent e) {
-            updateLoaiPhongInfo();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            updateLoaiPhongInfo();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            updateLoaiPhongInfo();
-        }
-        });
+        loadMaLoaiPhong();
+    
+        cbMaLP.addActionListener(e -> updateLoaiPhongInfo());
     }
+    
+    private void loadMaLoaiPhong() {
+        java.util.List<LoaiPhongDTO> danhSachLoaiPhong = loaiPhongBus.getAllLoaiPhong();
+        cbMaLP.removeAllItems();
+    
+        for (LoaiPhongDTO lp : danhSachLoaiPhong) {
+            cbMaLP.addItem(lp.getMaLoaiPhong());
+        }
+    
+        if (phong != null) {
+            cbMaLP.setSelectedItem(phong.getMaLoaiPhong());
+        }
+    }
+    
+    
 
     private void updateLoaiPhongInfo() {
-        String maLP = txtMaLP.getText().trim();
-    
-        // Nếu mã loại phòng trống, không làm gì cả
-        if (maLP.isEmpty()) {
+        String maLP = (String) cbMaLP.getSelectedItem();
+        if (maLP == null || maLP.trim().isEmpty()) {
             txtTenLP.setText("");
             txtSoGiuong.setText("");
             txtGiaTien.setText("");
             return;
         }
     
-        // Lấy thông tin loại phòng từ cơ sở dữ liệu
         LoaiPhongDTO loaiPhong = loaiPhongBus.getById(maLP);
         if (loaiPhong != null) {
-            // Nếu tìm thấy loại phòng, cập nhật thông tin
             txtTenLP.setText(loaiPhong.getTenLoaiPhong());
             txtSoGiuong.setText(String.valueOf(loaiPhong.getSoGiuong()));
             txtGiaTien.setText(String.valueOf(loaiPhong.getGiaPhong()));
-        } 
+        }
     }
+    
     
     
 
     private void addRoom(){
         if(!checkFormInput()) return;
         String maPhong = txtMaPhong.getText().trim();
-        String maLP = txtMaLP.getText().trim();
+        String maLP = (String) cbMaLP.getSelectedItem();
         String trangThai = txtTrangThai.getText().trim();
 
         PhongDTO phong = new PhongDTO(maPhong, maLP, trangThai);
@@ -168,12 +171,11 @@ public class AddRoomGUI extends JDialog {
         if (!checkFormInput()) return;
     
         String maPhong = txtMaPhong.getText().trim();  
-        String maLP = txtMaLP.getText().trim();
-        
-        // Chỉ lấy thông tin mới của loại phòng khi mã loại phòng thay đổi
+        String maLP = (String) cbMaLP.getSelectedItem();
+
         LoaiPhongDTO loaiPhong = loaiPhongBus.getById(maLP);
         if (loaiPhong != null) {        
-            // Cập nhật mã phòng, mã loại phòng và trạng thái
+  
             String trangThai = txtTrangThai.getText().trim();
     
             PhongDTO phong = new PhongDTO(maPhong, maLP, trangThai);
@@ -202,7 +204,7 @@ public class AddRoomGUI extends JDialog {
             return false;
         }
     
-        String maLP = txtMaLP.getText().trim();
+        String maLP = (String) cbMaLP.getSelectedItem();
         if (maLP.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Mã loại phòng không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -235,4 +237,9 @@ public class AddRoomGUI extends JDialog {
         return true;
     }    
     
+    public JComboBox<String> getLoaiPhongComboBox() {
+        return cbMaLP;  
+    }
+    
+
 }

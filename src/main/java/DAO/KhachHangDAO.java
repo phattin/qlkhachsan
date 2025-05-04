@@ -137,8 +137,27 @@ public class KhachHangDAO {
         } catch (SQLException e) {
             System.err.println("Lỗi khi lấy thông tin khách hàng: " + e.getMessage());
         }
-        return null; // Trả về null nếu không tìm thấy khách hàng
+        return null; 
     }
     
-    
+    public String increaseMaKH() {
+        String maKH = null;
+        String query = "SELECT MAX(MaKhachHang) AS MaxMaKhachHang FROM khachhang";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                maKH = rs.getString("MaxMaKhachHang");
+                if (maKH != null) {
+                    int newMaKH = Integer.parseInt(maKH.substring(2)) + 1;
+                    maKH = "KH" + String.format("%03d", newMaKH);
+                } else {
+                    maKH = "KH001"; 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maKH;
+    }
 }

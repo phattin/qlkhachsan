@@ -51,7 +51,8 @@ public class AddCustomerGUI extends JDialog {
         inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         inputPanel.add(new JLabel("Mã Khách Hàng:"));
-        inputPanel.add(txtMaKH = new JTextField());
+        inputPanel.add(txtMaKH = new JTextField(khachHangBus.increaseMaKH()));
+        txtMaKH.setEditable(false);
         inputPanel.add(new JLabel("Họ Tên:"));
         inputPanel.add(txtHoTen = new JTextField());
         inputPanel.add(new JLabel("CCCD:"));
