@@ -48,4 +48,8 @@ public class KhachHangBUS {
     public KhachHangDTO getById(String maKH) {
         return khachHangDAO.getById(maKH);
     }
+
+    public String increaseMaKH() {
+        return khachHangDAO.increaseMaKH();
+    }
 }

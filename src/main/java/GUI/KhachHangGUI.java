@@ -38,7 +38,24 @@ public class KhachHangGUI extends JPanel {
         EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
 
         txtSearch = new JTextField(15);
-        txtSearch.setPreferredSize(new Dimension(150, 35));
+        txtSearch.setPreferredSize(new Dimension(150, 30));
+        // Thêm chức năng tìm kiếm
+        txtSearch.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                timKiem();
+            }
+        });
 
         PanelHeader.add(AddBtn);
         PanelHeader.add(EditBtn);
@@ -70,6 +87,43 @@ public class KhachHangGUI extends JPanel {
         AddBtn.addActionListener(e -> addNewCustomer());
         EditBtn.addActionListener(e -> editCustomer());
         DeleteBtn.addActionListener(e -> deleteCustomer());
+    }
+
+    // Thêm phương thức tìm kiếm
+    private void timKiem() {
+        String tuKhoa = txtSearch.getText().toLowerCase().trim();
+        if (tuKhoa.isEmpty()) {
+            loadTableData();  // Nếu ô tìm kiếm trống, hiển thị tất cả dữ liệu
+            return;
+        }
+
+        tableModel.setRowCount(0);
+        ArrayList<KhachHangDTO> danhSachKhachHang = khachHangBUS.getAllKhachHang();
+
+        for (KhachHangDTO kh : danhSachKhachHang) {
+            boolean timThay = false;
+            
+            // Tìm kiếm trên tất cả các cột
+            if (kh.getMaKhachHang().toLowerCase().contains(tuKhoa) ||
+                kh.getHoTen().toLowerCase().contains(tuKhoa) ||
+                kh.getCCCD().toLowerCase().contains(tuKhoa) ||
+                kh.getSDT().toLowerCase().contains(tuKhoa) ||
+                (kh.getEmail() != null && kh.getEmail().toLowerCase().contains(tuKhoa)) ||
+                (kh.getDiaChi() != null && kh.getDiaChi().toLowerCase().contains(tuKhoa))) {
+                timThay = true;
+            }
+            
+            if (timThay) {
+                tableModel.addRow(new Object[]{
+                    kh.getMaKhachHang(),
+                    kh.getHoTen(),
+                    kh.getCCCD(),
+                    kh.getSDT(),
+                    kh.getEmail(),
+                    kh.getDiaChi()
+                });
+            }
+        }
     }
 
     private void loadTableData() {

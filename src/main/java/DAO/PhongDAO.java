@@ -138,4 +138,24 @@ public class PhongDAO {
         return null;
     }
 
+    public String increaseMaPhong() {
+        String maPhong = null;
+        String query = "SELECT MAX(MaPhong) AS MaxMaPhong FROM phong";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                maPhong = rs.getString("MaxMaPhong");
+                if (maPhong != null) {
+                    int newMaPhong = Integer.parseInt(maPhong.substring(1)) + 1;
+                    maPhong = "P" + String.format("%03d", newMaPhong);
+                } else {
+                    maPhong = "P001"; // Nếu không có nhân viên nào, bắt đầu từ NV001
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maPhong;
+    }
 }

@@ -56,5 +56,9 @@ public class PhongBUS {
         PhongDTO phong = phongDAO.getById(maPhong);
         return phong != null;  
     }
+
+    public String increaseMaPhong() {
+        return phongDAO.increaseMaPhong();
+    }
 }
         
