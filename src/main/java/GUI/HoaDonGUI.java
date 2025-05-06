@@ -22,26 +22,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
-
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
 import BUS.HoaDonBUS;
-// import BUS.NhanVienBUS;
-// import BUS.TaiKhoanBUS;
 import DTO.HoaDonDTO;
-// import DTO.NhanVienDTO;
-// import DTO.TaiKhoanDTO;
 import fillter.Button;
 import fillter.Colors;
 
 public class HoaDonGUI extends JPanel {
-    private Button AddBtn, DeleteBtn, EditBtn;
+    private Button DetailBtn, PaymentBtn;
     private JTextField txtSearch;
     private JTable ContentTable;
     private JPanel PanelHeader, PanelContent, pSearch;
@@ -66,18 +60,14 @@ public class HoaDonGUI extends JPanel {
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         panelButtons.setBackground(Colors.MAIN_BACKGROUND);
 
-        AddBtn = new Button("menuButton", "Thêm", 120, 30, "/Icon/them_icon.png");
-        AddBtn.addActionListener(e -> themHoaDon());
+        DetailBtn = new Button("menuButton", "Xem chi tiết", 240, 30, "/Icon/detail-icon.png");
+        DetailBtn.addActionListener(e -> xemChiTiet());
 
-        DeleteBtn = new Button("menuButton", "Xóa", 120, 30, "/Icon/xoa_icon.png");
-        DeleteBtn.addActionListener(e -> xoaHoaDon());
+        PaymentBtn = new Button("menuButton", "Thanh toán", 240, 30, "/Icon/payment-icon.png");
+        PaymentBtn.addActionListener(e -> thanhToan());
 
-        EditBtn = new Button("menuButton", "Sửa", 120, 30, "/Icon/sua_icon.png");
-        EditBtn.addActionListener(e -> suaHoaDon());
-
-        panelButtons.add(AddBtn);
-        panelButtons.add(DeleteBtn);
-        panelButtons.add(EditBtn);
+        panelButtons.add(DetailBtn);
+        panelButtons.add(PaymentBtn);
 
         pSearch = new JPanel();
         pSearch.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
@@ -241,7 +231,7 @@ public class HoaDonGUI extends JPanel {
     }
     
 
-    private void themHoaDon() {
+    private void xemChiTiet() {
         JTextField txtMaHoaDon = new JTextField(hoaDonBUS.tangMaHoaDon());
         txtMaHoaDon.setEditable(false);
     
@@ -444,7 +434,7 @@ public class HoaDonGUI extends JPanel {
     
     
 
-    private void xoaHoaDon() {
+    private void thanhToan() {
         int selectedRow = ContentTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một hóa đơn để xóa.");
