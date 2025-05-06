@@ -1,4 +1,4 @@
-package GUI; 
+package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -21,10 +21,11 @@ import fillter.Button;
 import fillter.Colors;
 
 public final class MainLayout extends JFrame {
-    private JPanel Title, Menu, Content; 
+    private JPanel Title, Menu, Content;
     private Button[] buttons;
     private static String maNhanVien;
-    
+    private DichVuGUI dvGUI; // Thêm instance của DichVuGUI
+
     public MainLayout(String maNV) {
         this.maNhanVien = maNV;
         initComponent();
@@ -70,11 +71,11 @@ public final class MainLayout extends JFrame {
         Menu.setPreferredSize(new Dimension(200, 0));
 
         ArrayList<String> LBButtons = new ArrayList<>();
-        
+
         // ======== Panel Content ========
-        Content = new JPanel(new BorderLayout()); 
+        Content = new JPanel(new BorderLayout());
         Content.setBackground(Colors.WHITE_FONT);
-        
+
         // Tạo các màn hình
         JPanel emptyPanel = new JPanel();
         PhongGUI phongGUI = new PhongGUI();
@@ -84,9 +85,9 @@ public final class MainLayout extends JFrame {
         TaiKhoanGUI tkGUI = new TaiKhoanGUI();
         PhanQuyenGUI qpGUI = new PhanQuyenGUI();
         HoaDonGUI hdGUI = new HoaDonGUI();
-        DichVuGUI dvGUI = new DichVuGUI();
+        dvGUI = new DichVuGUI(); // Khởi tạo instance của DichVuGUI
         ThongKeGUI thongkeGUI = new ThongKeGUI();
-        
+
         // Tạo các đường dẫn chứa icon
         String urlTrangchu = "/Icon/TrangChu_icon.png";
         String urlPhong = "/Icon/PHONG.png";
@@ -100,7 +101,7 @@ public final class MainLayout extends JFrame {
         String urlThongKe = "/Icon/ThongKe_icon.png";
         // Danh sách chứa các đường dẫn
         ArrayList<String> urlList = new ArrayList<>();
-        
+
         //Kiểm tra quyền của nhân viên
         System.out.println("Mã nhân viên: " + maNhanVien);
         String maChucVu = ChucVuBUS.getChucVuByMaNhanVien(maNhanVien).getMaChucVu();
@@ -111,77 +112,77 @@ public final class MainLayout extends JFrame {
             String tenChucNang = ChucNangBUS.getChucNangByMa(pq.getMaChucNang()).getTenChucNang();
             switch (tenChucNang) {
                 case "Trang chủ":
-                LBButtons.add("Trang chủ");
-                urlList.add(urlTrangchu);
-                break;
-                case "Quản lý phòng":
-                LBButtons.add("Phòng");
-                urlList.add(urlPhong);
-                break;
-                case "Đặt phòng":
-                LBButtons.add("Đặt phòng");
-                urlList.add(urlDatPhong);
-                break;
-                case "Quản lý khách hàng":
-                LBButtons.add("Khách hàng");
-                urlList.add(urlKhachHang);
-                break;
-                case "Quản lý nhân viên":
-                LBButtons.add("Nhân viên");
-                urlList.add(urlNhanVien);
+                    LBButtons.add("Trang chủ");
+                    urlList.add(urlTrangchu);
                     break;
-                    case "Quản lý tài khoản":
+                case "Quản lý phòng":
+                    LBButtons.add("Phòng");
+                    urlList.add(urlPhong);
+                    break;
+                case "Đặt phòng":
+                    LBButtons.add("Đặt phòng");
+                    urlList.add(urlDatPhong);
+                    break;
+                case "Quản lý khách hàng":
+                    LBButtons.add("Khách hàng");
+                    urlList.add(urlKhachHang);
+                    break;
+                case "Quản lý nhân viên":
+                    LBButtons.add("Nhân viên");
+                    urlList.add(urlNhanVien);
+                    break;
+                case "Quản lý tài khoản":
                     LBButtons.add("Tài khoản");
                     urlList.add(urlTaiKhoan);
                     break;
-                    case "Quản lý phân quyền":
+                case "Quản lý phân quyền":
                     LBButtons.add("Phân quyền");
                     urlList.add(urlPhanQuyen);
                     break;
-                    case "Quản lý hóa đơn":
+                case "Quản lý hóa đơn":
                     LBButtons.add("Hóa đơn");
                     urlList.add(urlHoaDon);
                     break;
-                    case "Quản lý dịch vụ":
+                case "Quản lý dịch vụ":
                     LBButtons.add("Dịch vụ");
                     urlList.add(urlDichVu);
                     break;
-                    case "Thống kê":
+                case "Thống kê":
                     LBButtons.add("Thống kê");
                     urlList.add(urlThongKe);
                     break;
-                }
             }
-            
-            //Chọn các chức năng
-            buttons = new Button[LBButtons.size()];
-            for (int i = 0; i < LBButtons.size(); i++) {
-                String tenChucNang = LBButtons.get(i);
-                String iconPath = urlList.get(i);
-                buttons[i] = new Button("menuButton", tenChucNang, 180, 40);
-                buttons[i].setButtonIcon(iconPath);
-            
-                Menu.add(buttons[i]);
-            
-                // Tạo panel tương ứng (tuỳ vào tên chức năng)
-                JPanel targetPanel = switch (tenChucNang) {
-                    case "Trang chủ" -> new JPanel();
-                    case "Phòng" -> new PhongGUI();
-                    case "Đặt phòng" -> new DatPhongGUI();
-                    case "Khách hàng" -> new KhachHangGUI();
-                    case "Nhân viên" -> new NhanVienGUI();
-                    case "Tài khoản" -> new TaiKhoanGUI();
-                    case "Phân quyền" -> new PhanQuyenGUI();
-                    case "Hóa đơn" -> new HoaDonGUI();
-                    // case "Dịch vụ" -> new DichVuGUI();
-                    case "Thống kê" -> new ThongKeGUI();
-                    default -> new JPanel(); // mặc định nếu không khớp
-                };
-            
-                final int index = i;
-                final JPanel selectedPanel = targetPanel;
-                buttons[i].addActionListener(e -> switchPanel(selectedPanel, buttons[index]));
-            }
+        }
+
+        //Chọn các chức năng
+        buttons = new Button[LBButtons.size()];
+        for (int i = 0; i < LBButtons.size(); i++) {
+            String tenChucNang = LBButtons.get(i);
+            String iconPath = urlList.get(i);
+            buttons[i] = new Button("menuButton", tenChucNang, 180, 40);
+            buttons[i].setButtonIcon(iconPath);
+
+            Menu.add(buttons[i]);
+
+            // Tạo panel tương ứng (tuỳ vào tên chức năng)
+            JPanel targetPanel = switch (tenChucNang) {
+                case "Trang chủ" -> new JPanel();
+                case "Phòng" -> phongGUI;
+                case "Đặt phòng" -> dpGUI;
+                case "Khách hàng" -> khGUI;
+                case "Nhân viên" -> nvGUI;
+                case "Tài khoản" -> tkGUI;
+                case "Phân quyền" -> qpGUI;
+                case "Hóa đơn" -> hdGUI;
+                case "Dịch vụ" -> dvGUI; // Sử dụng instance đã tạo
+                case "Thống kê" -> thongkeGUI;
+                default -> new JPanel(); // mặc định nếu không khớp
+            };
+
+            final int index = i;
+            final JPanel selectedPanel = targetPanel;
+            buttons[i].addActionListener(e -> switchPanel(selectedPanel, buttons[index]));
+        }
         // =============== Thêm nút Đăng Xuất cuối cùng Menu ===============
         JPanel panelDangXuat = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 15));
         panelDangXuat.setBackground(Colors.WHITE_FONT);
@@ -199,7 +200,7 @@ public final class MainLayout extends JFrame {
         });
 
         panelDangXuat.add(btnDangXuat);
-        Menu.add(panelDangXuat);  // thêm vào cuối Menu
+        Menu.add(panelDangXuat); // thêm vào cuối Menu
 
         Title.add(LBTitle);
         Title.add(ButtonMinimize);
@@ -213,18 +214,18 @@ public final class MainLayout extends JFrame {
         String firstChucNang = LBButtons.get(0);
         JPanel firstPanel = switch (firstChucNang) {
             case "Trang chủ" -> new JPanel();
-            case "Phòng" -> new PhongGUI();
-            case "Đặt phòng" -> new DatPhongGUI();
-            case "Khách hàng" -> new KhachHangGUI();
-            // case "Nhân viên" -> new NhanVienGUI();
-            // case "Tài khoản" -> new TaiKhoanGUI();
-            // case "Phân quyền" -> new PhanQuyenGUI();
-            case "Hóa đơn" -> new HoaDonGUI();
-            // case "Dịch vụ" -> new DichVuGUI();
-            case "Thống kê" -> new ThongKeGUI();
+            case "Phòng" -> phongGUI;
+            case "Đặt phòng" -> dpGUI;
+            case "Khách hàng" -> khGUI;
+            case "Nhân viên" -> nvGUI;
+            case "Tài khoản" -> tkGUI;
+            case "Phân quyền" -> qpGUI;
+            case "Hóa đơn" -> hdGUI;
+            case "Dịch vụ" -> dvGUI; // Hiển thị Dịch vụ đầu tiên (nếu là quyền đầu tiên)
+            case "Thống kê" -> thongkeGUI;
             default -> new JPanel();
         };
-        switchPanel(firstPanel, buttons[0]);
+        switchPanel(firstPanel, buttons[0]); // Hiển thị panel đầu tiên
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);

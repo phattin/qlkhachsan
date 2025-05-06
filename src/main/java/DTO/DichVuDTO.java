@@ -1,39 +1,49 @@
 package DTO;
 
 public class DichVuDTO {
-    private String maDichVu;
-    private String tenDichVu;
-    private int giaDichVu;
-    
-    public DichVuDTO() {}
+    private String maDV;
+    private String tenDV;
+    private int giaDV;
 
-    public DichVuDTO(String maDichVu, String tenDichVu, int giaDichVu) {
-        this.maDichVu = maDichVu;
-        this.tenDichVu = tenDichVu;
-        this.giaDichVu = giaDichVu;
+    public DichVuDTO() {
     }
 
-    public String getMaDichVu() {
-        return maDichVu;
+    public DichVuDTO(String maDV, String tenDV, int giaDV) {
+        this.maDV = maDV;
+        this.tenDV = tenDV;
+        this.giaDV = giaDV;
     }
 
-    public String getTenDichVu() {
-        return tenDichVu;
+    public String getMaDV() {
+        return maDV;
     }
 
-    public int getGiaDichVu() {
-        return giaDichVu;
+    public void setMaDV(String maDV) {
+        this.maDV = maDV;
     }
 
-    public void setMaDichVu(String maDichVu) {
-        this.maDichVu = maDichVu;
+    public String getTenDV() {
+        return tenDV;
     }
 
-    public void setTenDichVu(String tenDichVu) {
-        this.tenDichVu = tenDichVu;
+    public void setTenDV(String tenDV) {
+        this.tenDV = tenDV;
     }
 
-    public void setGiaDichVu(int giaDichVu) {
-        this.giaDichVu = giaDichVu;
+    public int getGiaDV() {
+        return giaDV;
+    }
+
+    public void setGiaDV(int giaDV) {
+        this.giaDV = giaDV;
+    }
+
+    @Override
+    public String toString() {
+        return "DichVuDTO{" +
+                "maDV='" + maDV + '\'' +
+                ", tenDV='" + tenDV + '\'' +
+                ", giaDV=" + giaDV +
+                '}';
     }
 }

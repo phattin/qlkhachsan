@@ -335,16 +335,16 @@ public class DatPhongGUI extends JPanel {
         JTable dichVuTable = new JTable(dichVuTableModel);
         dichVuTable.setRowHeight(30);
 
-        // Lấy danh sách dịch vụ từ DichVuBUS
-        DichVuBUS dichVuBUS = new DichVuBUS();
-        ArrayList<DichVuDTO> danhSachDichVu = dichVuBUS.layDanhSachDichVu();
-        for (DichVuDTO dv : danhSachDichVu) {
-            dichVuTableModel.addRow(new Object[]{
-                dv.getMaDichVu(), 
-                dv.getTenDichVu(), 
-                dv.getGiaDichVu()
-            });
-        }
+       // Lấy danh sách dịch vụ từ DichVuBUS
+    DichVuBUS dichVuBUS = new DichVuBUS();
+    ArrayList<DichVuDTO> danhSachDichVu = dichVuBUS.getAllDichVu(); // Đúng tên phương thức BUS
+    for (DichVuDTO dv : danhSachDichVu) {
+        dichVuTableModel.addRow(new Object[]{
+            dv.getMaDV(), 
+            dv.getTenDV(), 
+            dv.getGiaDV() 
+        });
+    }
 
         JScrollPane scrollPane = new JScrollPane(dichVuTable);
         scrollPane.getViewport().setBackground(Colors.MAIN_BACKGROUND);
@@ -464,14 +464,14 @@ public class DatPhongGUI extends JPanel {
                         String tenDV = (String) suDungDichVuTableModel.getValueAt(i, 1);
                         int soLuong = (int) suDungDichVuTableModel.getValueAt(i, 2);
                         
-                        // Lấy mã dịch vụ từ tên dịch vụ
-                        String maDV = "";
-                        for (DichVuDTO dv : danhSachDichVu) {
-                            if (dv.getTenDichVu().equals(tenDV)) {
-                                maDV = dv.getMaDichVu();
-                                break;
+                    // Lấy mã dịch vụ từ tên dịch vụ
+                      String maDV = "";
+                     for (DichVuDTO dv : danhSachDichVu) {
+                     if (dv.getTenDV().equals(tenDV)) { // Sử dụng getTenDV()
+                      maDV = dv.getMaDV();           // Sử dụng getMaDV()
+                        break;
+                               }
                             }
-                        }
                         
                         // Tạo đối tượng SuDungDichVuDTO và lưu vào CSDL
                         if (!maDV.isEmpty()) {
@@ -985,12 +985,12 @@ public class DatPhongGUI extends JPanel {
     
         // Lấy danh sách dịch vụ từ DichVuBUS
         DichVuBUS dichVuBUS = new DichVuBUS();
-        ArrayList<DichVuDTO> danhSachDichVu = dichVuBUS.layDanhSachDichVu();
+        ArrayList<DichVuDTO> danhSachDichVu = dichVuBUS.getAllDichVu();
         for (DichVuDTO dv : danhSachDichVu) {
             dichVuTableModel.addRow(new Object[]{
-                dv.getMaDichVu(), 
-                dv.getTenDichVu(), 
-                dv.getGiaDichVu()
+                dv.getMaDV(), 
+                dv.getTenDV(), 
+                dv.getGiaDV()
             });
         }
     
@@ -1041,9 +1041,9 @@ public class DatPhongGUI extends JPanel {
             
             // Tìm tên và giá dịch vụ từ mã dịch vụ
             for (DichVuDTO dv : danhSachDichVu) {
-                if (dv.getMaDichVu().equals(sddv.getMaDv())) {
-                    tenDV = dv.getTenDichVu();
-                    giaDV = dv.getGiaDichVu();
+                if (dv.getMaDV().equals(sddv.getMaDv())) {
+                    tenDV = dv.getTenDV();
+                    giaDV = dv.getGiaDV();
                     break;
                 }
             }
@@ -1146,8 +1146,8 @@ public class DatPhongGUI extends JPanel {
                         // Lấy mã dịch vụ từ tên dịch vụ
                         String maDV = "";
                         for (DichVuDTO dv : danhSachDichVu) {
-                            if (dv.getTenDichVu().equals(tenDV)) {
-                                maDV = dv.getMaDichVu();
+                            if (dv.getTenDV().equals(tenDV)) {
+                                maDV = dv.getMaDV();
                                 break;
                             }
                         }
