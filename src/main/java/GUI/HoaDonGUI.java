@@ -240,9 +240,9 @@ public class HoaDonGUI extends JPanel {
 
     private void capNhatTienThua(JTextField txtTongTien, JTextField txtTienTra, JTextField txtTienThua) {
         try {
-            double tongTien = Double.parseDouble(txtTongTien.getText().trim());
-            double tienTra = Double.parseDouble(txtTienTra.getText().trim());
-            double tienThua = tienTra - tongTien;
+            int tongTien = Integer.parseInt(txtTongTien.getText().trim());
+            int tienTra = Integer.parseInt(txtTienTra.getText().trim());
+            int tienThua = tienTra - tongTien;
             txtTienThua.setText(String.valueOf(tienThua));
         } catch (NumberFormatException e) {
             txtTienThua.setText("");
@@ -325,7 +325,7 @@ public class HoaDonGUI extends JPanel {
         JTextField txtMaHD = new JTextField(hoaDon.getMaHoaDon());
         txtMaHD.setEditable(false);
 
-        JTextField txtTongTien = new JTextField(String.valueOf(hoaDon.getTongTien()));
+        JTextField txtTongTien = new JTextField(String.valueOf((int) hoaDon.getTongTien()));
         txtTongTien.setEditable(false);
 
         JTextField txtTienTra = new JTextField();
