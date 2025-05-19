@@ -444,7 +444,6 @@ public class NhanVienGUI extends JPanel {
         addRow.accept("Địa Chỉ:", txtDiaChi);
         addRow.accept("Lương:", txtLuong);
         addRow.accept("Ngày Nhận Việc:", dateChooser);
-        addRow.accept("Chức Vụ:", cbChucVu);
     
         // Nút
         Button btnOk = new Button("confirm", "Xác nhận", 120, 35, null);
@@ -477,10 +476,13 @@ public class NhanVienGUI extends JPanel {
                 String diaChi = txtDiaChi.getText();
                 String luong = txtLuong.getText();
                 String ngayNhanViec = new SimpleDateFormat("yyyy-MM-dd").format(dateChooser.getDate());
-                String maChucVu = dsChucVu.get(cbChucVu.getSelectedIndex()).getMaChucVu();
     
                 if (hoTen.isEmpty() || sdt.isEmpty() || email.isEmpty() || diaChi.isEmpty() || luong.isEmpty()) {
                     JOptionPane.showMessageDialog(dialog, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!nvBUS.checkTextUpdate(maNV, hoTen, sdt, email, diaChi, Long.parseLong(luong))) {
                     return;
                 }
     

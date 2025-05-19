@@ -177,6 +177,35 @@ public class NhanVienDAO {
         }
         return false; // Không tìm thấy email
     }
+    public boolean phoneNumberExists(String maNV, String phoneNumber) {
+        String query = "SELECT * FROM nhanvien WHERE SoDienThoai = ? AND MaNhanVien != ? AND TrangThai = 'Hiện'";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, phoneNumber);
+            stmt.setString(2, maNV);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Nếu có kết quả trả về, tức là số điện thoại đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Không tìm thấy số điện thoại
+    }
+    
+    public boolean emailExists(String maNV, String email) {
+        String query = "SELECT * FROM nhanvien WHERE Email = ? AND MaNhanVien != ? AND TrangThai = 'Hiện'";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, maNV);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Nếu có kết quả trả về, tức là email đã tồn tại
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Không tìm thấy email
+    }
 
     public ArrayList<NhanVienDTO> search(String cbTimKiem, String txTimKiem, String gioiTinh,
                                      Double luongMin, Double luongMax,
