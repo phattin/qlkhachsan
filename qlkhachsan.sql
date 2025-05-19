@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 19, 2025 lúc 11:54 PM
+-- Thời gian đã tạo: Th5 20, 2025 lúc 12:55 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -37,6 +37,7 @@ CREATE TABLE `chucnang` (
 --
 
 INSERT INTO `chucnang` (`MaChucNang`, `TenChucNang`) VALUES
+('CN001', 'Quản lý loại phòng'),
 ('CN002', 'Quản lý phòng'),
 ('CN003', 'Đặt phòng'),
 ('CN004', 'Quản lý khách hàng'),
@@ -65,8 +66,7 @@ CREATE TABLE `chucvu` (
 
 INSERT INTO `chucvu` (`MaChucVu`, `TenChucVu`, `TrangThai`) VALUES
 ('CV001', 'Quản lý', 'Hiện'),
-('CV002', 'Nhân viên', 'Hiện'),
-('CV003', 'Admin', 'Hiện');
+('CV002', 'Nhân viên', 'Hiện');
 
 -- --------------------------------------------------------
 
@@ -79,13 +79,6 @@ CREATE TABLE `danhsachphong` (
   `MaDatPhong` varchar(10) DEFAULT NULL,
   `MaPhong` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `danhsachphong`
---
-
-INSERT INTO `danhsachphong` (`MaDSP`, `MaDatPhong`, `MaPhong`) VALUES
-('DSP001', 'DP001', 'P002');
 
 -- --------------------------------------------------------
 
@@ -101,16 +94,6 @@ CREATE TABLE `datphong` (
   `NgayTraPhong` date DEFAULT NULL,
   `trangThaiXoa` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `datphong`
---
-
-INSERT INTO `datphong` (`MaDatPhong`, `MaPhong`, `MaKhachHang`, `NgayNhanPhong`, `NgayTraPhong`, `trangThaiXoa`) VALUES
-('DP001', 'P002', 'KH002', '2025-05-18', '2025-05-19', 0),
-('DP002', 'P001', 'KH003', '2025-05-21', '2025-05-29', 0),
-('DP003', 'P001', 'KH003', '2024-05-18', '2024-05-20', 1),
-('DP004', 'P001', 'KH003', '2025-04-21', '2025-04-25', 1);
 
 -- --------------------------------------------------------
 
@@ -151,16 +134,6 @@ CREATE TABLE `hoadon` (
   `TienThua` int(10) NOT NULL,
   `TrangThai` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `hoadon`
---
-
-INSERT INTO `hoadon` (`MaHoaDon`, `MaDatPhong`, `MaNhanVien`, `NgayTao`, `TongTien`, `TienTra`, `TienThua`, `TrangThai`) VALUES
-('HD001', 'DP001', 'NV001', '2025-05-18', 400000, 400000, 0, 'Đã thanh toán'),
-('HD002', 'DP002', 'NV001', '2025-05-20', 25200000, 25300000, 100000, 'Đã thanh toán'),
-('HD003', 'DP003', 'NV001', '2024-05-18', 6600000, 7000000, 400000, 'Đã thanh toán'),
-('HD004', 'DP004', 'NV001', '2025-04-21', 12000000, 12000000, 0, 'Đã thanh toán');
 
 -- --------------------------------------------------------
 
@@ -231,10 +204,7 @@ CREATE TABLE `nhanvien` (
 
 INSERT INTO `nhanvien` (`MaNhanVien`, `HoTen`, `GioiTinh`, `SoDienThoai`, `Email`, `DiaChi`, `Luong`, `NgayNhanViec`, `TrangThai`) VALUES
 ('NV001', 'Nguyen Van A', 'Nam', '0123456789', 'nva@example.com', 'Quận 5', 10000000, '2023-01-15', 'Hiện'),
-('NV002', 'Tran Thi B', 'Nữ', '0987654321', 'ttb@example.com', 'Quận 8', 8000000, '2023-05-20', 'Hiện'),
-('NV003', 'Le Van C', 'Nam', '0987654322', 'vanc@gmail.com', 'abcabc', 10000000, '2025-05-19', 'Hiện'),
-('NV004', 'Nguyen Thang', 'Nam', '0987654333', 'thang@gmail.com', 'abc acb', 10000000, '2025-05-19', 'Hiện'),
-('NV005', 'Tung Thien', 'Nam', '0987654444', 'thien@gmail.com', 'abc abc', 10000000, '2025-05-19', 'Hiện');
+('NV002', 'Tran Thi B', 'Nữ', '0987654321', 'ttb@example.com', 'Quận 8', 8000000, '2023-05-20', 'Hiện');
 
 -- --------------------------------------------------------
 
@@ -252,6 +222,7 @@ CREATE TABLE `phanquyen` (
 --
 
 INSERT INTO `phanquyen` (`MaChucVu`, `MaChucNang`) VALUES
+('CV001', 'CN001'),
 ('CV001', 'CN002'),
 ('CV001', 'CN003'),
 ('CV001', 'CN004'),
@@ -262,10 +233,7 @@ INSERT INTO `phanquyen` (`MaChucVu`, `MaChucNang`) VALUES
 ('CV001', 'CN009'),
 ('CV001', 'CN010'),
 ('CV002', 'CN003'),
-('CV002', 'CN008'),
-('CV003', 'CN005'),
-('CV003', 'CN006'),
-('CV003', 'CN007');
+('CV002', 'CN008');
 
 -- --------------------------------------------------------
 
@@ -286,7 +254,7 @@ CREATE TABLE `phong` (
 
 INSERT INTO `phong` (`MaPhong`, `MaLoaiPhong`, `TrangThai`, `trangThaiXoa`) VALUES
 ('P001', 'LP001', 'Trống', 0),
-('P002', 'LP002', 'Đã đặt', 0);
+('P002', 'LP002', 'Trống', 0);
 
 -- --------------------------------------------------------
 
@@ -300,13 +268,6 @@ CREATE TABLE `sudungdichvu` (
   `MaDV` varchar(10) DEFAULT NULL,
   `SoLuong` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `sudungdichvu`
---
-
-INSERT INTO `sudungdichvu` (`MaSuDungDV`, `MaDatPhong`, `MaDV`, `SoLuong`) VALUES
-('SD001', 'DP001', 'DV001', 2);
 
 -- --------------------------------------------------------
 
@@ -329,10 +290,7 @@ CREATE TABLE `taikhoan` (
 
 INSERT INTO `taikhoan` (`MaTK`, `MaNhanVien`, `MaChucVu`, `TenDangNhap`, `MatKhau`, `TrangThai`) VALUES
 ('TK001', 'NV001', 'CV001', 'admin', '123456', 'Hiện'),
-('TK002', 'NV002', 'CV002', 'user01', 'password', 'Hiện'),
-('TK003', 'NV003', 'CV002', 'vanc', '123456', 'Hiện'),
-('TK004', 'NV004', 'CV003', 'thang', '123456', 'Hiện'),
-('TK005', 'NV005', 'CV003', 'thien', '123456', 'Hiện');
+('TK002', 'NV002', 'CV002', 'user01', 'password', 'Hiện');
 
 --
 -- Chỉ mục cho các bảng đã đổ
